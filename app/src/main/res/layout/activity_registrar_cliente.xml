@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Logo -->
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/rcliente"
+            android:layout_marginTop="15dp"
+            android:contentDescription="Logo" />
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registro de Cliente"
+            android:textSize="28sp"
+            android:textColor="#1A1A1A"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-medium" />
+
+        <!-- CardView con formulario -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Tipo de documento + Toggle a la derecha -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tipo de documento"
+                        android:textSize="16sp"
+                        android:textColor="#000000" />
+
+                    <ToggleButton
+                        android:id="@+id/toggle_dni_ruc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:textOff="DNI"
+                        android:textOn="RUC"
+                        android:checked="false"
+                        android:textColor="#000000"
+                        android:backgroundTint="#64DD17"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Número de Documento -->
+                <EditText
+                    android:id="@+id/et_numero_documento"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:hint="Ingrese DNI"
+                    android:inputType="number"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Nombre -->
+                <EditText
+                    android:id="@+id/et_nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Nombre completo"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Teléfono -->
+                <EditText
+                    android:id="@+id/et_telefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Teléfono"
+                    android:inputType="phone"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Correo -->
+                <EditText
+                    android:id="@+id/et_correo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Correo electrónico"
+                    android:inputType="textEmailAddress"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Dirección -->
+                <EditText
+                    android:id="@+id/et_direccion"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="16dp"
+                    android:hint="Dirección"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <!-- Botón registrar -->
+                <Button
+                    android:id="@+id/btn_registrarcliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Registrar"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:backgroundTint="#64DD17"
+                    android:fontFamily="sans-serif-medium" />
+
+                <!-- Botón Cancelar -->
+                <Button
+                    android:id="@+id/btn_cancelarcliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Cancelar"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:backgroundTint="#D32F2F"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

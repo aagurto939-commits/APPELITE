@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <EditText
+            android:id="@+id/etNombreProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del producto"
+            android:textColorHint="#406DE1"
+            android:textColor="#000"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/etDescripcionProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:textColorHint="#406DE1"
+            android:textColor="#000"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/etNombreProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etPrecioProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Precio"
+            android:inputType="numberDecimal"
+            android:textColorHint="#406DE1"
+            android:textColor="#000"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/etDescripcionProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etStockProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Stock"
+            android:inputType="number"
+            android:textColorHint="#406DE1"
+            android:textColor="#000"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/etPrecioProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <RadioGroup
+            android:id="@+id/rgMoneda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/etStockProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp">
+            <RadioButton
+                android:id="@+id/rbSoles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Soles (PEN)"/>
+            <RadioButton
+                android:id="@+id/rbDolares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dólares (USD)"/>
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnGuardarProducto"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Guardar"
+            android:backgroundTint="#406DE1"
+            android:textColor="#fff"
+            app:layout_constraintTop_toBottomOf="@id/rgMoneda"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

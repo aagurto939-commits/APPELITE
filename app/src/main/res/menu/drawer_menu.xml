@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_productos"
+        android:icon="@drawable/ic_productos"
+        android:title="Productos" />
+    <item
+        android:id="@+id/nav_servicios"
+        android:icon="@drawable/ic_machinery"
+        android:title="Servicios" />
+    <item
+        android:id="@+id/nav_ventas"
+        android:icon="@drawable/ic_ventas"
+        android:title="Ventas" />
+    <item
+        android:id="@+id/nav_clientes"
+        android:icon="@drawable/ic_clients"
+        android:title="Clientes" />
+    <item
+        android:id="@+id/nav_reportes"
+        android:icon="@drawable/ic_reports"
+        android:title="Reportes" />
+    <item
+        android:id="@+id/nav_saldos"
+        android:icon="@drawable/ic_stats"
+        android:title="Saldos" />
+    <item
+        android:id="@+id/nav_pagos"
+        android:icon="@drawable/ic_lock"
+        android:title="Pagos" />
+    <item
+        android:id="@+id/nav_cotizaciones"
+        android:icon="@drawable/ic_stats"
+        android:title="Cotizaciones" />
+</menu>

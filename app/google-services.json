@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "423273843723",
+    "project_id": "appelite-49f1c",
+    "storage_bucket": "appelite-49f1c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:423273843723:android:835e72b985f6aafd8c8b0e",
+        "android_client_info": {
+          "package_name": "com.example.appelite"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVN3PlWGLJoW6D6bmHnz70a6FCr60KDK0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

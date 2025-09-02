@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_splash_background"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="40dp">
+
+    <!-- Logo Container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Logo con forma de N -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="30dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="20dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/logo_background"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/logoIcon"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_elite_logo"
+                    android:scaleType="centerInside" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- App Name -->
+        <TextView
+            android:id="@+id/appName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Elite.Maq"
+            android:textSize="42sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.05" />
+
+    </LinearLayout>
+
+    <!-- Bottom Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Get Started Button -->
+        <Button
+            android:id="@+id/btnGetStarted"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Get Started"
+            android:textColor="#FF6B35"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_white_background"
+            android:layout_marginBottom="20dp"
+            android:visibility="invisible"
+            android:letterSpacing="0.1" />
+
+        <!-- Already have account -->
+        <TextView
+            android:id="@+id/haveAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I already have an account"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            android:visibility="invisible"
+            android:alpha="0.9"
+            android:padding="10dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

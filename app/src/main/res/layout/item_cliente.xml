@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:backgroundTint="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical">
+
+        <!-- Imagen o logo del cliente -->
+        <ImageView
+            android:id="@+id/imgClienteLogo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/cliente"
+            android:background="@drawable/circle_background" />
+
+        <!-- Contenedor de textos -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Tipo y Número de Documento -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/txtTipoDocumento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DNI"
+                    android:textColor="#1E88E5"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtNumeroDocumento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=": 12345678"
+                    android:textColor="#1E88E5"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginStart="4dp" />
+            </LinearLayout>
+
+            <!-- Nombre o Razón Social -->
+            <TextView
+                android:id="@+id/txtNombreCompleto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Juan Pérez"
+                android:textColor="#212121"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Teléfono -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layoutDirection="ltr"
+                >
+
+                <ImageView
+                    android:id="@+id/imgTelefono"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_menu_call"
+                    app:tint="#616161" />
+
+                <TextView
+                    android:id="@+id/txtTelefono"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="987654321"
+                    android:textColor="#616161"
+                    android:textSize="14sp"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+            <!-- Correo -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:id="@+id/imgCorreo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/ic_dialog_email"
+                    app:tint="#616161" />
+
+                <TextView
+                    android:id="@+id/txtCorreo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="cliente@mail.com"
+                    android:textColor="#616161"
+                    android:textSize="14sp"
+                    android:layout_marginStart="6dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

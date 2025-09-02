@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/module_gradient_background"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imgModulo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/circle_icon_background"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_manage"
+            android:tint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvTituloModulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Módulo"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDescripcionModulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Descripción"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:alpha="0.8" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

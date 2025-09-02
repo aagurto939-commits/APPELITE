@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNombreProductoVenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del producto"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#406DE1"/>
+
+            <TextView
+                android:id="@+id/tvPrecioProductoVenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0.00"
+                android:textSize="14sp"
+                android:textColor="#27ae60"/>
+
+            <TextView
+                android:id="@+id/tvStockProductoVenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stock: 0"
+                android:textSize="12sp"
+                android:textColor="#888"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/etCantidadVenta"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:text="0"
+                android:inputType="number"
+                android:textAlignment="center"
+                android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/btnAgregarVenta"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="16sp"
+                android:backgroundTint="#27ae60"
+                android:layout_marginStart="4dp"/>
+
+            <Button
+                android:id="@+id/btnQuitarVenta"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="16sp"
+                android:backgroundTint="#e74c3c"
+                android:layout_marginStart="4dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
