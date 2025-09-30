@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
-    android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24"
-    android:tint="#4FC3F7">
+    android:width="50dp"
+    android:height="50dp"
+    android:viewportWidth="50"
+    android:viewportHeight="50">
+    
+    <!-- Círculo azul de fondo -->
     <path
-        android:fillColor="#4FC3F7"
-        android:pathData="M9,13L15,7L9,1L3,7L9,13ZM9,21L15,15L9,9L3,15L9,21Z"/>
+        android:fillColor="#1E5AA8"
+        android:pathData="M25,25m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"/>
+    
+    <!-- Letras "EM" en blanco -->
     <path
-        android:fillColor="#4FC3F7"
-        android:pathData="M15,1L21,7L15,13L9,7L15,1Z"/>
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,15 L15,35 L18,35 L18,27 L22,27 L22,35 L25,35 L25,15 L22,15 L22,24 L18,24 L18,15 Z"/>
+    
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,15 L28,35 L35,35 L35,32 L31,32 L31,27 L34,27 L34,24 L31,24 L31,18 L35,18 L35,15 Z"/>
+
 </vector>

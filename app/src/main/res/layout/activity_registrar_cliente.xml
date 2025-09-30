@@ -70,7 +70,7 @@
                         android:textOn="RUC"
                         android:checked="false"
                         android:textColor="#000000"
-                        android:backgroundTint="#64DD17"
+                        android:backgroundTint="#2196F3"
                         android:textSize="16sp" />
                 </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
-                    android:backgroundTint="#64DD17"
+                    android:backgroundTint="#2196F3"
                     android:fontFamily="sans-serif-medium" />
 
                 <!-- Botón Cancelar -->

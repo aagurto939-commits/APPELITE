@@ -22,7 +22,7 @@
             android:background="@drawable/circle_icon_background"
             android:padding="12dp"
             android:src="@android:drawable/ic_menu_manage"
-            android:tint="#FFFFFF" />
+            app:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tvTituloModulo"

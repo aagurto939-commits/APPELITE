@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-    txtEmail = findViewById(R.id.txtEmailLogin);
-    txtPass = findViewById(R.id.txtPassLogin);
-    btnLogin = findViewById(R.id.btnLogin);
+        txtEmail = findViewById(R.id.txtEmailLogin);
+        txtPass = findViewById(R.id.txtPassLogin);
+        btnLogin = findViewById(R.id.btnLogin);
     tvRegister = findViewById(R.id.lblRegistrate);
     }
 
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setText("Iniciando...");
         btnLogin.setEnabled(false);
 
-                                Intent intent = new Intent(MainActivity.this, PantallaInicioModernaActivity.class);
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Login exitoso
                             Toast.makeText(MainActivity.this, "Bienvenido!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, Pantalla_inicio.class);
+                            Intent intent = new Intent(MainActivity.this, PantallaInicioModernaActivity.class);
                             startActivity(intent);
                             finish();
                         } else {

@@ -15,34 +15,40 @@ public class Pantalla_inicio extends AppCompatActivity {
                 setContentView(R.layout.activity_pantalla_inicio_moderna);
 
                 // Productos
-                CardView cardProductos = findViewById(R.id.cardProductos);
-                cardProductos.setOnClickListener(new View.OnClickListener() {
+                CardView cardProductos = findViewById(R.id.cardInventario); // Cambiado a un ID que sí existe
+                if (cardProductos != null) {
+                    cardProductos.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, ProductosActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, ProductosActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
 
-                // Servicios
-                CardView cardServicios = findViewById(R.id.cardServicios);
-                cardServicios.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, ServiciosActivity.class);
-                                startActivity(intent);
-                        }
-                });
+                // Servicios - Temporalmente deshabilitado por problema de ID en R.java
+                // CardView cardServicios = findViewById(R.id.cardServicios);
+                // if (cardServicios != null) {
+                //     cardServicios.setOnClickListener(new View.OnClickListener() {
+                //         @Override
+                //         public void onClick(View v) {
+                //             Intent intent = new Intent(Pantalla_inicio.this, ServiciosActivity.class);
+                //             startActivity(intent);
+                //         }
+                //     });
+                // }
 
                 // Ventas
-                CardView cardVentas = findViewById(R.id.cardVentas);
-                cardVentas.setOnClickListener(new View.OnClickListener() {
+                CardView cardVentas = findViewById(R.id.cardFacturacion);
+                if (cardVentas != null) {
+                    cardVentas.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, VentasActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, VentasActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
 
                 // Clientes
                 CardView cardClientes = findViewById(R.id.cardClientes);
@@ -56,43 +62,50 @@ public class Pantalla_inicio extends AppCompatActivity {
 
                 // Reportes
                 CardView cardReportes = findViewById(R.id.cardReportes);
-                cardReportes.setOnClickListener(new View.OnClickListener() {
+                if (cardReportes != null) {
+                    cardReportes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, ReportesActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, ReportesActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
 
-                // Saldos
-                CardView cardSaldos = findViewById(R.id.cardSaldos);
-                cardSaldos.setOnClickListener(new View.OnClickListener() {
+                // Saldos (usando cardProveedores como alternativa)
+                CardView cardSaldos = findViewById(R.id.cardProveedores);
+                if (cardSaldos != null) {
+                    cardSaldos.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, SaldosActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, SaldosActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
 
-                // Pagos
-                CardView cardPagos = findViewById(R.id.cardPagos);
-                cardPagos.setOnClickListener(new View.OnClickListener() {
+                // Pagos (usando cardConfiguracion como alternativa)
+                CardView cardPagos = findViewById(R.id.cardConfiguracion);
+                if (cardPagos != null) {
+                    cardPagos.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                Intent intent = new Intent(Pantalla_inicio.this, PagosActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, PagosActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
 
-                // Cotizaciones
-                CardView cardCotizaciones = findViewById(R.id.cardCotizaciones);
-                cardCotizaciones.setOnClickListener(new View.OnClickListener() {
+                // Servicios Postventa
+                CardView cardServicios = findViewById(R.id.cardServicios);
+                if (cardServicios != null) {
+                    cardServicios.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                                // ⚠️ Debes crear esta Activity si aún no existe
-                                Intent intent = new Intent(Pantalla_inicio.this, CotizacionesActivity.class);
-                                startActivity(intent);
+                            Intent intent = new Intent(Pantalla_inicio.this, ServiciosActivity.class);
+                            startActivity(intent);
                         }
-                });
+                    });
+                }
         }
 }

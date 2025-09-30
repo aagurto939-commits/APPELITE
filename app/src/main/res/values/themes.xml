@@ -1,9 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Tema base (Material 3, con/ sin modo oscuro) -->
     <style name="Base.Theme.AppElite" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- aquí puedes personalizar colores si quieres -->
     </style>
 
-    <style name="Theme.AppElite" parent="Base.Theme.AppElite" />
+    <!-- Tema que usará la app (el que pide tu Manifest) -->
+    <style name="Theme.AppElite" parent="Base.Theme.AppElite">
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Optimizaciones para reducir errores de destroySurfaces -->
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <!-- Optimización de memoria -->
+        <item name="android:hardwareAccelerated">true</item>
+        <item name="android:largeHeap">true</item>
+    </style>
+
+    <!-- (Opcional) Tema para el Splash; puedes usar el mismo -->
+    <style name="Theme.AppElite.Splash" parent="Theme.AppElite" />
 </resources>

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -26,6 +27,10 @@ import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
+    private EditText txtApellidoNombre, txtCorreo, txtTelefono, txtContraseña;
+    private Button btnRegistar;
+    private TextView tvSignIn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,53 +42,101 @@ public class Register extends AppCompatActivity {
             return insets;
         });
 
-    EditText txtApellidoNombre = findViewById(R.id.etFullName);
-    EditText txtCorreo = findViewById(R.id.etEmail);
-    EditText txtTelefono = findViewById(R.id.etPhone);
-    EditText txtContraseña = findViewById(R.id.etPassword);
-    Button btnRegistar = findViewById(R.id.btnSignUp);
-    Button btncancelar = findViewById(R.id.btncancelar);
-    Button btnlimpiar = findViewById(R.id.btnlimpiar);
+        // Inicializar vistas
+        initViews();
+        setupEvents();
+    }
 
-        btncancelar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cancelar = new Intent(Register.this,MainActivity.class);
-                startActivity(cancelar);
-            }
+    private void initViews() {
+        txtApellidoNombre = findViewById(R.id.etFullName);
+        txtCorreo = findViewById(R.id.etEmail);
+        txtTelefono = findViewById(R.id.etPhone);
+        txtContraseña = findViewById(R.id.etPassword);
+        btnRegistar = findViewById(R.id.btnSignUp);
+        tvSignIn = findViewById(R.id.tvSignIn);
+    }
+
+    private void setupEvents() {
+        // Botón registrar
+        btnRegistar.setOnClickListener(v -> attemptRegister());
+        
+        // TextView para ir al login
+        tvSignIn.setOnClickListener(v -> {
+            Intent intent = new Intent(Register.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         });
+    }
 
-        btnRegistar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String nombreusuario = txtApellidoNombre.getText().toString();
-                String telefonousuario = txtTelefono.getText().toString();
-                String emailusuario = txtCorreo.getText().toString();
-                String passusuario = txtContraseña.getText().toString();
+    private void attemptRegister() {
+        String nombreusuario = txtApellidoNombre.getText().toString().trim();
+        String telefonousuario = txtTelefono.getText().toString().trim();
+        String emailusuario = txtCorreo.getText().toString().trim();
+        String passusuario = txtContraseña.getText().toString().trim();
 
-                if (TextUtils.isEmpty(nombreusuario)||TextUtils.isEmpty(telefonousuario)||TextUtils.isEmpty(emailusuario)||TextUtils.isEmpty(passusuario)){
-                    Toast.makeText(Register.this,"Todos los campos son obligatorios",Toast.LENGTH_SHORT).show();
-                }else{
-                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailusuario,passusuario).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
-                                String UserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                                Map<String,String> user = new HashMap<>();
-                                user.put("username",nombreusuario);
-                                user.put("Telefono", telefonousuario);
-                                user.put("email", emailusuario);
+        // Validaciones
+        if (TextUtils.isEmpty(nombreusuario)) {
+            txtApellidoNombre.setError("Nombre requerido");
+            txtApellidoNombre.requestFocus();
+            return;
+        }
 
-                                FirebaseDatabase.getInstance().getReference().child("usuarios").child(UserId).setValue(user);
-                                Toast.makeText(Register.this,"Registro Exitoso",Toast.LENGTH_SHORT).show();
-                            }
-                            else{
-                                Toast.makeText(Register.this,task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                            }
+        if (TextUtils.isEmpty(emailusuario)) {
+            txtCorreo.setError("Email requerido");
+            txtCorreo.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(telefonousuario)) {
+            txtTelefono.setError("Teléfono requerido");
+            txtTelefono.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(passusuario)) {
+            txtContraseña.setError("Contraseña requerida");
+            txtContraseña.requestFocus();
+            return;
+        }
+
+        if (passusuario.length() < 6) {
+            txtContraseña.setError("Contraseña debe tener al menos 6 caracteres");
+            txtContraseña.requestFocus();
+            return;
+        }
+
+        // Mostrar loading
+        btnRegistar.setText("Registrando...");
+        btnRegistar.setEnabled(false);
+
+        // Crear usuario con Firebase
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailusuario, passusuario)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        btnRegistar.setText("Registrar");
+                        btnRegistar.setEnabled(true);
+                        
+                        if (task.isSuccessful()) {
+                            String UserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            Map<String, String> user = new HashMap<>();
+                            user.put("username", nombreusuario);
+                            user.put("Telefono", telefonousuario);
+                            user.put("email", emailusuario);
+
+                            FirebaseDatabase.getInstance().getReference().child("usuarios").child(UserId).setValue(user);
+                            Toast.makeText(Register.this, "Registro Exitoso", Toast.LENGTH_SHORT).show();
+                            
+                            // Ir al login después del registro exitoso
+                            Intent intent = new Intent(Register.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            String errorMessage = task.getException() != null ? 
+                                task.getException().getMessage() : "Error en el registro";
+                            Toast.makeText(Register.this, errorMessage, Toast.LENGTH_LONG).show();
                         }
-                    });
-                }
-            }
-        });
+                    }
+                });
     }
 }

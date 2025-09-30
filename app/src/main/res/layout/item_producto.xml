@@ -14,6 +14,16 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/tvCodigoProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Código: PROD001"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#666"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
             android:id="@+id/tvNombreProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

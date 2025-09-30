@@ -1,121 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:background="@drawable/login_gradient">
+    android:background="@drawable/gradient_gold_auth_background">
 
-    <!-- Contenedor del formulario -->
+    <!-- Header dorado con logo y texto -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white"
-        android:padding="24dp"
-        android:layout_margin="32dp"
-        android:elevation="8dp"
-        android:layout_gravity="center"
-        android:clipToPadding="false"
-        android:backgroundTint="#F8F8F8"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"
-        android:clipChildren="false">
+        android:layout_height="140dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="24dp">
 
-        <!-- Título -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- Logo circular con fondo dorado -->
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/gold_light"
+            android:gravity="center"
+            android:layout_marginEnd="20dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/compresorelite"
+                android:scaleType="centerInside"/>
+        </LinearLayout>
+
+        <!-- Texto -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="REGISTRAR"
-            android:textColor="#1798C4"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <!-- Campos de entrada -->
-        <EditText
-            android:id="@+id/etFullName"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Nombre completo"
-            android:drawableStart="@android:drawable/ic_menu_myplaces"
-            android:background="@android:color/transparent"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Elite Maquinarias SAC"
+                android:textSize="22sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
 
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Email"
-            android:drawableStart="@android:drawable/ic_dialog_email"
-            android:background="@android:color/transparent"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp" />
-
-        <EditText
-            android:id="@+id/etPhone"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Numero de celular"
-            android:drawableStart="@android:drawable/ic_menu_call"
-            android:background="@android:color/transparent"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp" />
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-                android:hint="Contraseña"
-            android:drawableStart="@android:drawable/ic_lock_idle_lock"
-            android:background="@android:color/transparent"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp"
-            android:inputType="textPassword" />
-
-        <!-- Botón Sign Up -->
-        <Button
-            android:id="@+id/btnSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Registrar"
-            android:backgroundTint="#1798C4"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-        <!-- Botón cancelar  -->
-        <Button
-            android:id="@+id/btncancelar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Cancelar"
-            android:backgroundTint="#1798C4"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-        <Button
-            android:id="@+id/btnlimpiar"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="Limpiar"
-            android:backgroundTint="#1798C4"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Texto para login -->
-        <TextView
-            android:id="@+id/tvSignIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already a Member? Sign in"
-            android:textColor="#1798C4"
-            android:textSize="12sp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crear Cuenta"
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
     </LinearLayout>
+
+    <!-- Card blanca con esquinas arriba redondeadas -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="16dp"
+        app:cardBackgroundColor="@color/white"
+        android:layout_marginTop="-24dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="32dp">
+
+                <!-- Nombre completo -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre completo"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText
+                    android:id="@+id/etFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/edittext_modern_background"
+                    android:hint="Ingresa tu nombre completo"
+                    android:padding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:inputType="textPersonName"
+                    android:layout_marginBottom="20dp"/>
+
+                <!-- Correo -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Correo electrónico"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/edittext_modern_background"
+                    android:hint="Ingresa tu correo electrónico"
+                    android:padding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:inputType="textEmailAddress"
+                    android:layout_marginBottom="20dp"/>
+
+                <!-- Teléfono -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Teléfono"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/edittext_modern_background"
+                    android:hint="Ingresa tu número de teléfono"
+                    android:padding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:inputType="phone"
+                    android:layout_marginBottom="20dp"/>
+
+                <!-- Contraseña -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Contraseña"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"/>
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:background="@drawable/edittext_modern_background"
+                    android:hint="Ingresa tu contraseña"
+                    android:padding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary"
+                    android:inputType="textPassword"
+                    android:layout_marginBottom="28dp"/>
+
+                <!-- Botón Registrar -->
+                <Button
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="CREAR CUENTA"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/button_gold_background"
+                    android:elevation="8dp"
+                    android:layout_marginBottom="24dp"/>
+
+                <!-- Texto login -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¿Ya tienes cuenta? "
+                        android:textSize="15sp"
+                        android:textColor="@color/text_secondary"/>
+
+                    <TextView
+                        android:id="@+id/tvSignIn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Inicia sesión"
+                        android:textSize="15sp"
+                        android:textColor="@color/gold_primary"
+                        android:textStyle="bold"
+                        android:clickable="true"
+                        android:focusable="true"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

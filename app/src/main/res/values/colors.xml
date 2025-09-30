@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Colores base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Esquema dorado/negro/blanco -->
+    <color name="gold_primary">#FFD700</color>
+    <color name="gold_light">#FFE55C</color>
+    <color name="gold_dark">#B8860B</color>
+    <color name="gold_accent">#FFA500</color>
+    
+    <!-- Grises para fondos -->
+    <color name="gray_light">#F8F9FA</color>
+    <color name="gray_medium">#E9ECEF</color>
+    <color name="gray_dark">#6C757D</color>
+    
+    <!-- Colores para cards y elementos -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#212529</color>
+    <color name="text_secondary">#6C757D</color>
+    
+    <!-- Gradientes -->
+    <color name="gradient_start">#FFD700</color>
+    <color name="gradient_end">#FFA500</color>
+    
+    <!-- Estados -->
+    <color name="success">#28A745</color>
+    <color name="warning">#FFC107</color>
+    <color name="error">#DC3545</color>
 </resources>

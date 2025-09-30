@@ -1,40 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/app_gradient">
+    android:background="#F5F8FB">
 
+    <!-- Header -->
     <LinearLayout
+        android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@drawable/header_gradient"
+        android:gravity="center_vertical"
+        android:elevation="4dp"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Volver"
+            app:tint="#FFFFFF" />
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Cotizaciones"
-            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#FF9800"
-            android:layout_gravity="center_horizontal" />
+            android:gravity="center"
+            android:layout_marginEnd="40dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewCotizaciones"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fabAddCotizacion"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="16dp"
+        <ImageButton
+            android:id="@+id/btnAddCotizacion"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_add"
-            app:backgroundTint="#FF9800"
-            app:tint="@android:color/white" />
+            android:contentDescription="Nueva Cotización"
+            app:tint="#FFFFFF" />
+
     </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- Filtros -->
+    <LinearLayout
+        android:id="@+id/layoutFiltros"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="2dp"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnTodas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Todas"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:backgroundTint="#2196F3"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+        <Button
+            android:id="@+id/btnPendientes"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Pendientes"
+            android:textColor="#2196F3"
+            android:textSize="12sp"
+            android:background="#FFFFFF"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+        <Button
+            android:id="@+id/btnAceptadas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Aceptadas"
+            android:textColor="#2196F3"
+            android:textSize="12sp"
+            android:background="#FFFFFF"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+        <Button
+            android:id="@+id/btnVencidas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Vencidas"
+            android:textColor="#2196F3"
+            android:textSize="12sp"
+            android:background="#FFFFFF"
+            android:textAllCaps="false"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+    </LinearLayout>
+
+    <!-- Contenido principal -->
+    <FrameLayout
+        android:id="@+id/frameContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutFiltros"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Lista de cotizaciones -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCotizaciones"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:clipToPadding="false"
+            android:paddingBottom="90dp" />
+
+        <!-- Estado vacío -->
+        <LinearLayout
+            android:id="@+id/layoutEmptyState"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_assignment"
+                app:tint="#CCCCCC"
+                android:layout_marginBottom="16dp" />
+
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No hay cotizaciones"
+                android:textColor="#757575"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Crea tu primera cotización tocando el botón +"
+                android:textColor="#BDBDBD"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:paddingHorizontal="32dp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- FloatingActionButton -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabNuevaCotizacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="#2196F3"
+        app:tint="#FFFFFF"
+        app:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

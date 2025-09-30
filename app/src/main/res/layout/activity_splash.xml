@@ -2,93 +2,143 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_splash_background"
     android:orientation="vertical"
+    android:background="@drawable/splash_gold_gradient"
     android:gravity="center"
-    android:padding="40dp">
+    android:padding="32dp">
 
-    <!-- Logo Container -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Espacio superior -->
+    <Space
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_weight="1" />
 
-        <!-- Logo con forma de N -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginBottom="30dp"
-            app:cardCornerRadius="30dp"
-            app:cardElevation="20dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/logo_background"
-                android:gravity="center">
-
-                <ImageView
-                    android:id="@+id/logoIcon"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ic_elite_logo"
-                    android:scaleType="centerInside" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- App Name -->
-        <TextView
-            android:id="@+id/appName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Elite.Maq"
-            android:textSize="42sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
-            android:letterSpacing="0.05" />
-
-    </LinearLayout>
-
-    <!-- Bottom Section -->
+    <!-- Contenedor del logo con círculo dorado -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_marginBottom="48dp">
 
-        <!-- Get Started Button -->
-        <Button
-            android:id="@+id/btnGetStarted"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Get Started"
-            android:textColor="#FF6B35"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:background="@drawable/button_white_background"
-            android:layout_marginBottom="20dp"
-            android:visibility="invisible"
-            android:letterSpacing="0.1" />
+        <!-- Logo en círculo dorado -->
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:background="@drawable/logo_circle_gold"
+            android:gravity="center"
+            android:elevation="16dp"
+            android:layout_marginBottom="32dp">
 
-        <!-- Already have account -->
+            <ImageView
+                android:id="@+id/logoCompresor"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/elite"
+                android:contentDescription="Logo Elite Maquinarias"
+                android:scaleType="centerInside" />
+
+        </LinearLayout>
+
+        <!-- Título principal -->
         <TextView
-            android:id="@+id/haveAccount"
+            android:id="@+id/appTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I already have an account"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="normal"
-            android:visibility="invisible"
+            android:text="ELITE"
+            android:textSize="56sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-condensed"
+            android:elevation="4dp"
+            android:shadowColor="@color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="4" />
+
+        <!-- Subtítulo -->
+        <TextView
+            android:id="@+id/companyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAQUINARIAS SAC"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:letterSpacing="0.15"
             android:alpha="0.9"
-            android:padding="10dp" />
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2" />
+
+        <!-- Descripción -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gestión Empresarial Integral"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-light"
+            android:alpha="0.8"
+            android:shadowColor="@color/black"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2" />
 
     </LinearLayout>
+
+    <!-- Espacio inferior -->
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Indicador de carga (opcional) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="32dp">
+
+        <!-- Puntos de carga -->
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/gold_light"
+            android:layout_marginEnd="4dp" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/gold_light"
+            android:layout_marginEnd="4dp" />
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/gold_light" />
+
+    </LinearLayout>
+
+    <!-- Botón INGRESAR (oculto por defecto) -->
+    <Button
+        android:id="@+id/btnIngresar"
+        android:layout_width="220dp"
+        android:layout_height="56dp"
+        android:text="INGRESAR"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="@drawable/button_gold_background"
+        android:elevation="8dp"
+        android:visibility="invisible"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

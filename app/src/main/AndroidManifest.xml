@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,37 +14,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppElite"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
         tools:targetApi="31">
 
-        <activity android:name=".RegistrarCliente" android:exported="false" />
-        <activity android:name=".ReportesActivity" android:exported="false" />
-        <activity android:name=".SaldosActivity" android:exported="false" />
-        <activity android:name=".PagosActivity" android:exported="false" />
-        <activity android:name=".VentasActivity" android:exported="false" />
-        <activity android:name=".ProductosActivity" android:exported="false" />
-        <activity android:name=".Pantalla_inicio" android:exported="false" />
-        <activity android:name=".PantallaInicioModernaActivity" android:exported="false" />
-        <activity android:name=".Register" android:exported="false" />
-
-        <!-- 🔹 Faltaban estas -->
-        <activity android:name=".ServiciosActivity" android:exported="false" />
-        <activity android:name=".CotizacionesActivity" android:exported="false" />
-
-        <!-- Splash Activity como actividad principal -->
+        <!-- Splash como launcher, usando el MISMO stack de Material -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppElite.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- MainActivity (Login) -->
-        <activity
-            android:name=".MainActivity"
+        <!-- El resto hereda el tema del <application> -->
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".Register" android:exported="false" />
+        <activity 
+            android:name=".PantallaInicioModernaActivity" 
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop" />
+        <activity android:name=".ClientesActivity" android:exported="false" />
+        <activity android:name=".ProductosActivity" android:exported="false" />
+        <activity android:name=".ReporteInventarioActivity" android:exported="false" />
+        <activity android:name=".VentasActivity" android:exported="false" />
+        <activity android:name=".PagosActivity" android:exported="false" />
+        <activity android:name=".SaldosActivity" android:exported="false" />
+        <activity android:name=".ReportesActivity" android:exported="false" />
+        <activity 
+            android:name=".ServiciosActivity" 
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop" />
+        <activity android:name=".CalendarioServiciosActivity" android:exported="false" />
+        <activity 
+            android:name=".NuevoServicioActivity" 
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:launchMode="singleTop" />
+        <activity android:name=".CotizacionesActivity" android:exported="false" />
+        <activity android:name=".NuevaCotizacionActivity" android:exported="false" />
+        <activity android:name=".RegistrarCliente" android:exported="false" />
+        <activity android:name=".VerVentasActivity" android:exported="false" />
+        <activity android:name=".EditarVentaActivity" android:exported="false" />
+        <activity android:name=".ProveedoresActivity" android:exported="false" />
+
     </application>
 </manifest>

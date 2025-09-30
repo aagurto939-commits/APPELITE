@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="160dp"
     android:orientation="vertical"
-    android:background="#006F8F"
+    android:background="@drawable/header_gradient"
     android:gravity="center"
     android:padding="16dp">
 
@@ -11,7 +11,7 @@
         android:id="@+id/imgLogo"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/logoelite"
+        android:src="@drawable/ic_launcher_foreground"
         android:contentDescription="Logo Elite Maquinarias"
         android:layout_gravity="center" />
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Elite Maquinarias SAC"
-        android:textColor="#DFB300"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center"

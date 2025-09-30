@@ -35,11 +35,45 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     @Override
     public void onBindViewHolder(@NonNull ProductoViewHolder holder, int position) {
         Producto producto = productos.get(position);
+        
+        // Mostrar código del producto
+        String codigo = producto.getCodigo();
+        if (codigo != null && !codigo.isEmpty()) {
+            holder.tvCodigo.setText("Código: " + codigo);
+            holder.tvCodigo.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvCodigo.setVisibility(View.GONE);
+        }
+        
+        // Información básica
         holder.tvNombre.setText(producto.getNombre());
-        holder.tvDescripcion.setText(producto.getDescripcion());
-        holder.tvPrecio.setText("Precio: " + (producto.getMoneda().equals("USD") ? "$" : "S/") + producto.getPrecio());
-        holder.tvStock.setText("Stock: " + producto.getStock());
-        holder.tvMoneda.setText("Moneda: " + (producto.getMoneda().equals("USD") ? "Dólares" : "Soles"));
+        holder.tvDescripcion.setText(producto.getDescripcion() != null ? producto.getDescripcion() : "Sin descripción");
+        
+        // Precio con formato mejorado
+        String moneda = producto.getMoneda() != null ? producto.getMoneda() : "PEN";
+        String simbolo = moneda.equals("USD") ? "$" : "S/";
+        holder.tvPrecio.setText("Precio: " + simbolo + String.format("%.2f", producto.getPrecio()));
+        
+        // Stock con indicador de stock bajo
+        String stockText = "Stock: " + producto.getStock();
+        if (producto.tieneStockBajo() && producto.getStockMinimo() > 0) {
+            stockText += " (¡Bajo!)";
+            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_red_light));
+        } else {
+            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.primary_text_light));
+        }
+        holder.tvStock.setText(stockText);
+        
+        // Información adicional en lugar de solo moneda
+        String infoAdicional = "";
+        if (producto.getCategoria() != null && !producto.getCategoria().isEmpty()) {
+            infoAdicional = "Categoría: " + producto.getCategoria();
+        } else {
+            infoAdicional = "Moneda: " + (moneda.equals("USD") ? "Dólares" : "Soles");
+        }
+        holder.tvMoneda.setText(infoAdicional);
+        
+        // Listeners
         holder.btnEditar.setOnClickListener(v -> listener.onEditar(producto));
         holder.btnEliminar.setOnClickListener(v -> listener.onEliminar(producto));
     }
@@ -55,10 +89,11 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     }
 
     static class ProductoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNombre, tvDescripcion, tvPrecio, tvStock, tvMoneda;
+        TextView tvCodigo, tvNombre, tvDescripcion, tvPrecio, tvStock, tvMoneda;
         ImageButton btnEditar, btnEliminar;
         ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvCodigo = itemView.findViewById(R.id.tvCodigoProducto);
             tvNombre = itemView.findViewById(R.id.tvNombreProducto);
             tvDescripcion = itemView.findViewById(R.id.tvDescripcionProducto);
             tvPrecio = itemView.findViewById(R.id.tvPrecioProducto);
