@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +40,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         // Mostrar código del producto
         String codigo = producto.getCodigo();
         if (codigo != null && !codigo.isEmpty()) {
-            holder.tvCodigo.setText("Código: " + codigo);
+            holder.tvCodigo.setText(codigo);
             holder.tvCodigo.setVisibility(View.VISIBLE);
         } else {
             holder.tvCodigo.setVisibility(View.GONE);
@@ -52,19 +53,30 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         // Precio con formato mejorado
         String moneda = producto.getMoneda() != null ? producto.getMoneda() : "PEN";
         String simbolo = moneda.equals("USD") ? "$" : "S/";
-        holder.tvPrecio.setText("Precio: " + simbolo + String.format("%.2f", producto.getPrecio()));
+        holder.tvPrecio.setText(simbolo + String.format("%.2f", producto.getPrecio()));
         
-        // Stock con indicador de stock bajo
-        String stockText = "Stock: " + producto.getStock();
+        // Stock con indicador visual
+        holder.tvStock.setText(String.valueOf(producto.getStock()));
+        
+        // Indicadores de estado de stock
         if (producto.tieneStockBajo() && producto.getStockMinimo() > 0) {
-            stockText += " (¡Bajo!)";
-            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.holo_red_light));
+            // Stock bajo
+            holder.indicadorStockBajo.setVisibility(View.VISIBLE);
+            holder.indicadorStock.setVisibility(View.GONE);
+            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.warning));
+        } else if (producto.getStock() > 0) {
+            // Stock normal
+            holder.indicadorStock.setVisibility(View.VISIBLE);
+            holder.indicadorStockBajo.setVisibility(View.GONE);
+            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.text_primary));
         } else {
-            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(android.R.color.primary_text_light));
+            // Sin stock
+            holder.indicadorStock.setVisibility(View.GONE);
+            holder.indicadorStockBajo.setVisibility(View.GONE);
+            holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.warning));
         }
-        holder.tvStock.setText(stockText);
         
-        // Información adicional en lugar de solo moneda
+        // Información adicional
         String infoAdicional = "";
         if (producto.getCategoria() != null && !producto.getCategoria().isEmpty()) {
             infoAdicional = "Categoría: " + producto.getCategoria();
@@ -91,6 +103,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     static class ProductoViewHolder extends RecyclerView.ViewHolder {
         TextView tvCodigo, tvNombre, tvDescripcion, tvPrecio, tvStock, tvMoneda;
         ImageButton btnEditar, btnEliminar;
+        LinearLayout indicadorStock, indicadorStockBajo;
+        
         ProductoViewHolder(@NonNull View itemView) {
             super(itemView);
             tvCodigo = itemView.findViewById(R.id.tvCodigoProducto);
@@ -101,6 +115,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             tvMoneda = itemView.findViewById(R.id.tvMonedaProducto);
             btnEditar = itemView.findViewById(R.id.btnEditarProducto);
             btnEliminar = itemView.findViewById(R.id.btnEliminarProducto);
+            indicadorStock = itemView.findViewById(R.id.indicadorStock);
+            indicadorStockBajo = itemView.findViewById(R.id.indicadorStockBajo);
         }
     }
 }

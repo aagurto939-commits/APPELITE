@@ -7,53 +7,72 @@
     android:layout_height="match_parent"
     tools:context=".VentasActivity"
     android:orientation="vertical"
-    android:background="#F5F8FB">
+    android:background="@drawable/servicios_background">
 
-    <!-- Header -->
+    <!-- Header dorado moderno -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="80dp"
         android:orientation="horizontal"
-        android:background="@drawable/header_gradient"
+        android:background="@drawable/gradient_gold_background"
         android:gravity="center_vertical"
-        android:elevation="4dp"
-        android:padding="16dp">
+        android:elevation="8dp"
+        android:padding="15dp">
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/black"
             android:src="@drawable/ic_arrow_back"
             android:contentDescription="Volver"
-            app:tint="#FFFFFF" />
+            app:tint="@color/gold_primary"
+            android:padding="10dp" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Ventas Realizadas"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginEnd="40dp" />
+            android:layout_marginStart="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ventas"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gestión de Ventas y Facturación"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/btnNuevaVenta"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/black"
             android:src="@drawable/ic_add"
             android:contentDescription="Nueva Venta"
-            app:tint="#FFFFFF" />
+            app:tint="@color/gold_primary"
+            android:padding="10dp" />
 
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="10dp"
+        android:paddingBottom="40dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,31 +84,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="2"
-                android:layout_marginBottom="16dp">
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp">
 
                 <!-- Ventas Hoy -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardVentasHoy"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    android:backgroundTint="#FFFFFF">
+                    android:layout_margin="12dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/gold_light"
+                            android:gravity="center"
+                            android:layout_marginBottom="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_calendar"
+                                app:tint="@color/black" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Ventas Hoy"
-                            android:textColor="#757575"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"
                             android:layout_marginBottom="8dp" />
 
@@ -98,8 +134,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$215.00"
-                            android:textColor="#212121"
-                            android:textSize="24sp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp" />
 
@@ -107,8 +143,8 @@
                             android:id="@+id/tvVentasHoyNumero"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1 ventas"
-                            android:textColor="#2196F3"
+                            android:text="1 venta"
+                            android:textColor="@color/gold_primary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -119,25 +155,41 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardTotalVentas"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:layout_columnWeight="1"
-                    android:layout_margin="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    android:backgroundTint="#FFFFFF">
+                    android:layout_margin="12dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp"
+                    android:backgroundTint="@color/white">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:gravity="center"
-                        android:padding="16dp">
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/gold_light"
+                            android:gravity="center"
+                            android:layout_marginBottom="12dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_stats"
+                                app:tint="@color/black" />
+
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Ventas"
-                            android:textColor="#757575"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp"
                             android:layout_marginBottom="8dp" />
 
@@ -146,8 +198,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="$270.00"
-                            android:textColor="#212121"
-                            android:textSize="24sp"
+                            android:textColor="@color/text_primary"
+                            android:textSize="20sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp" />
 
@@ -156,7 +208,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2 ventas totales"
-                            android:textColor="#4CAF50"
+                            android:textColor="@color/gold_primary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -170,27 +222,28 @@
                 android:id="@+id/cardGestionarCotizaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:backgroundTint="#FFFFFF"
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                android:backgroundTint="@color/white"
                 android:clickable="true"
+                android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/ic_assignment"
-                        app:tint="#2196F3"
+                        app:tint="@color/black"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="#E3F2FD"
+                        android:backgroundTint="@color/gold_light"
                         android:padding="8dp"
                         android:layout_marginEnd="16dp" />
 
@@ -204,7 +257,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Gestionar Cotizaciones"
-                            android:textColor="#212121"
+                            android:textColor="@color/text_primary"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="4dp" />
@@ -213,7 +266,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Crear, editar y gestionar cotizaciones"
-                            android:textColor="#757575"
+                            android:textColor="@color/text_secondary"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -232,16 +285,16 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp"
-                android:backgroundTint="#FFFFFF">
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="8dp"
+                android:backgroundTint="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="10dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -254,14 +307,14 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_history"
-                            app:tint="#2196F3"
+                            app:tint="@color/gold_primary"
                             android:layout_marginEnd="8dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Historial de Ventas"
-                            android:textColor="#212121"
+                            android:textColor="@color/text_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -279,9 +332,9 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="12dp"
+                            android:padding="16dp"
                             android:background="@drawable/item_background"
-                            android:layout_marginBottom="8dp">
+                            android:layout_marginBottom="12dp">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -293,7 +346,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Andrea Agurto"
-                                    android:textColor="#212121"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
@@ -301,21 +354,21 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="943142906"
-                                    android:textColor="#757575"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Power Bank x4 + Cargador Rápido x1"
-                                    android:textColor="#757575"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="11sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="20-sept, 01:45"
-                                    android:textColor="#9E9E9E"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="10sp" />
 
                             </LinearLayout>
@@ -330,7 +383,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$215.00"
-                                    android:textColor="#212121"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -338,10 +391,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="transferencia"
-                                    android:textColor="#2196F3"
+                                    android:textColor="@color/gold_primary"
                                     android:textSize="10sp"
                                     android:background="@drawable/status_background"
-                                    android:backgroundTint="#E3F2FD"
+                                    android:backgroundTint="@color/gold_light"
                                     android:paddingHorizontal="6dp"
                                     android:paddingVertical="2dp" />
 
@@ -355,9 +408,9 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:padding="12dp"
+                            android:padding="16dp"
                             android:background="@drawable/item_background"
-                            android:layout_marginBottom="8dp">
+                            android:layout_marginBottom="12dp">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -369,7 +422,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Ana López"
-                                    android:textColor="#212121"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
@@ -377,7 +430,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="+155566777"
-                                    android:textColor="#757575"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -392,7 +445,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="$55.00"
-                                    android:textColor="#212121"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -400,10 +453,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="efectivo"
-                                    android:textColor="#4CAF50"
+                                    android:textColor="@color/success"
                                     android:textSize="10sp"
                                     android:background="@drawable/status_background"
-                                    android:backgroundTint="#E8F5E8"
+                                    android:backgroundTint="@color/gold_light"
                                     android:paddingHorizontal="6dp"
                                     android:paddingVertical="2dp" />
 

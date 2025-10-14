@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F5F7FB">
+    android:background="@drawable/gradient_gold_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,9 +15,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="6dp"
-            android:backgroundTint="#FFFFFF">
+            app:cardCornerRadius="24dp"
+            app:cardElevation="12dp"
+            android:backgroundTint="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -25,33 +25,78 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- Título -->
-                <TextView
+                <!-- Título con gradiente -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Producto"
-                    android:textColor="#222B45"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/gradient_gold_background"
+                    android:padding="16dp"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginEnd="-16dp"
+                    android:layout_marginTop="-1dp">
+
+                    <LinearLayout
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="@color/black"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_add"
+                            app:tint="@color/gold_primary"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gestión de Producto"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Crear o editar producto"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <!-- Nombre -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="#2196F3"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
-                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxStrokeColor="@color/success"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:hintTextColor="@color/success"
+                    app:startIconTint="@color/success"
+                    app:startIconDrawable="@drawable/ic_add"
                     android:hint="Nombre del producto *">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etNombreProducto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapWords"/>
+                        android:inputType="textCapWords"
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Código + escáner -->
@@ -67,11 +112,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:boxStrokeColor="#2196F3"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
+                        app:boxStrokeColor="@color/warning"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:hintTextColor="@color/warning"
+                        app:startIconTint="@color/warning"
+                        app:startIconDrawable="@drawable/ic_barcode_scan"
                         android:hint="Código de producto">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -79,17 +127,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:imeOptions="actionNext"
-                            android:inputType="text"/>
+                            android:inputType="text"
+                            android:textColor="@color/text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <ImageButton
                         android:id="@+id/btnScanCodigo"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:layout_marginStart="8dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="@color/warning"
                         android:src="@drawable/ic_barcode_scan"
-                        app:tint="#2196F3"
+                        app:tint="@color/white"
                         android:contentDescription="Escanear código"/>
                 </LinearLayout>
 
@@ -99,14 +149,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    app:boxStrokeColor="#2196F3"
-                    android:hint="Descripción">
+                    app:boxStrokeColor="@android:color/holo_blue_bright"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:hintTextColor="@android:color/holo_blue_bright"
+                    app:startIconTint="@android:color/holo_blue_bright"
+                    app:startIconDrawable="@drawable/ic_assignment"
+                    android:hint="Descripción del producto">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDescripcionProducto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapSentences"/>
+                        android:inputType="textCapSentences"
+                        android:textColor="@color/text_primary"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Fila: Precio + Tipo de cambio (juntos, sin duplicar Precio) -->
@@ -122,12 +180,21 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Precio">
+                        app:boxStrokeColor="@color/success"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:hintTextColor="@color/success"
+                        app:startIconTint="@color/success"
+                        app:startIconDrawable="@drawable/ic_ventas"
+                        android:hint="Precio de venta">
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etPrecioProducto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"/>
+                            android:inputType="numberDecimal"
+                            android:textColor="@color/text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -135,14 +202,22 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:hint="Tipo de cambio (PEN por 1 USD)"
+                        android:hint="Precio de costo"
+                        app:boxStrokeColor="@android:color/holo_red_light"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:hintTextColor="@android:color/holo_red_light"
+                        app:startIconTint="@android:color/holo_red_light"
+                        app:startIconDrawable="@drawable/ic_ventas"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTipoCambio"
+                            android:id="@+id/etPrecioCosto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
-                            android:text="3.80"/>
+                            android:textColor="@color/text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -160,7 +235,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Cantidad disponible">
+                        app:boxStrokeColor="@android:color/holo_purple"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:hintTextColor="@android:color/holo_purple"
+                        app:startIconTint="@android:color/holo_purple"
+                        app:startIconDrawable="@drawable/ic_inventario"
+                        android:hint="Stock disponible">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etStockProducto"
@@ -168,7 +251,8 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:inputType="number"
-                            android:text="0"/>
+                            android:text="0"
+                            android:textColor="@color/text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Stepper -->
@@ -181,64 +265,105 @@
 
                         <ImageButton
                             android:id="@+id/btnIncStock"
-                            android:layout_width="48dp"
-                            android:layout_height="40dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_width="44dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/success"
                             android:src="@drawable/ic_arrow_upward"
-                            app:tint="#2196F3"
+                            app:tint="@color/white"
                             android:contentDescription="Aumentar"/>
 
                         <ImageButton
                             android:id="@+id/btnDecStock"
-                            android:layout_width="48dp"
-                            android:layout_height="40dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:layout_width="44dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/circle_background"
+                            android:backgroundTint="@color/warning"
                             android:src="@drawable/ic_arrow_downward"
-                            app:tint="#2196F3"
+                            app:tint="@color/white"
                             android:contentDescription="Disminuir"/>
                     </LinearLayout>
 
-                    <!-- Moneda (Chips) -->
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/rgMoneda"
+                    <!-- Moneda (Spinner compacto) -->
+                    <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        app:singleSelection="true">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <!-- PEN -->
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/rbSoles"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:text="PEN"
-                            android:checked="true"
-                            android:textColor="@color/chip_choice_text"
-                            app:chipBackgroundColor="@color/chip_choice_bg"
-                            app:checkedIconVisible="false"
-                            app:rippleColor="@android:color/transparent" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_dollar"
+                            app:tint="@android:color/holo_blue_bright"
+                            android:layout_marginEnd="8dp"/>
 
-                        <!-- USD -->
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/rbDolares"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            android:text="USD"
-                            android:layout_marginStart="8dp"
-                            android:textColor="@color/chip_choice_text"
-                            app:chipBackgroundColor="@color/chip_choice_bg"
-                            app:checkedIconVisible="false"
-                            app:rippleColor="@android:color/transparent" />
-                    </com.google.android.material.chip.ChipGroup>
+                        <Spinner
+                            android:id="@+id/spinnerMoneda"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/spinner_background"
+                            android:padding="12dp"/>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Precio convertido -->
-                <TextView
-                    android:id="@+id/tvPrecioConvertido"
+                    <!-- Información adicional -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="≈ PEN 0.00"
-                    android:textColor="#546E7A"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                     <com.google.android.material.textfield.TextInputLayout
+                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_weight="1"
+                         app:boxStrokeColor="@color/success"
+                         app:boxCornerRadiusTopStart="16dp"
+                         app:boxCornerRadiusTopEnd="16dp"
+                         app:boxCornerRadiusBottomStart="16dp"
+                         app:boxCornerRadiusBottomEnd="16dp"
+                         app:hintTextColor="@color/success"
+                         app:startIconTint="@color/success"
+                         app:startIconDrawable="@drawable/ic_productos"
+                         android:hint="Categoría">
+
+                         <Spinner
+                             android:id="@+id/spinnerCategoria"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:background="@android:color/transparent"/>
+                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        app:boxStrokeColor="@android:color/holo_red_dark"
+                        app:boxCornerRadiusTopStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:hintTextColor="@android:color/holo_red_dark"
+                        app:startIconTint="@android:color/holo_red_dark"
+                        app:startIconDrawable="@drawable/ic_remove"
+                        android:hint="Stock mínimo">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etStockMinimo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:text="0"
+                            android:textColor="@color/text_primary"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -248,32 +373,38 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp">
 
-            <!-- Cancelar con borde azul -->
+            <!-- Cancelar con borde rojo -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelarProducto"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:text="Cancelar"
                 android:textAllCaps="false"
-                android:textColor="#2196F3"
-                app:strokeColor="#2196F3"
-                app:strokeWidth="2dp"/>
+                android:textColor="@android:color/holo_red_light"
+                android:textStyle="bold"
+                app:strokeColor="@android:color/holo_red_light"
+                app:strokeWidth="2dp"
+                app:cornerRadius="16dp"
+                app:icon="@drawable/ic_remove"
+                app:iconTint="@android:color/holo_red_light"/>
 
-            <!-- Primario -->
+            <!-- Guardar con verde -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGuardarProducto"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="52dp"
                 android:layout_marginStart="12dp"
-                android:text="Crear producto"
+                android:text="Guardar Producto"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
-                app:cornerRadius="10dp"
-                app:backgroundTint="#2196F3"/>
+                android:textColor="@color/white"
+                app:cornerRadius="16dp"
+                app:backgroundTint="@color/success"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@color/white"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

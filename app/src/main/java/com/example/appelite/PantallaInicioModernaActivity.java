@@ -91,7 +91,15 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
         
         // Inventario
         findViewById(R.id.cardInventario).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProductosActivity.class));
+            System.out.println("DEBUG: Card Inventario clickeado");
+            Toast.makeText(this, "Abriendo Inventario...", Toast.LENGTH_SHORT).show();
+            try {
+                startActivity(new Intent(this, ProductosActivity.class));
+                System.out.println("DEBUG: ProductosActivity iniciada exitosamente");
+            } catch (Exception e) {
+                System.out.println("DEBUG: Error al abrir ProductosActivity: " + e.getMessage());
+                Toast.makeText(this, "Error al abrir Inventario: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
         });
         
         // Proveedores
@@ -99,9 +107,9 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
             // startActivity(new Intent(this, ProveedoresActivity.class));
         });
         
-        // Facturación
+        // Ventas
         findViewById(R.id.cardFacturacion).setOnClickListener(v -> {
-            // startActivity(new Intent(this, FacturacionActivity.class));
+            startActivity(new Intent(this, VentasActivity.class));
         });
         
         // Reportes

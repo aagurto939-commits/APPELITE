@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp">
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    android:backgroundTint="@color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,79 +17,180 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvCodigoProducto"
-            android:layout_width="wrap_content"
+        <!-- HEADER CON CÓDIGO Y ESTADO -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Código: PROD001"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="#666"
-            android:layout_marginBottom="4dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
+            <TextView
+                android:id="@+id/tvCodigoProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Código: PROD001"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary"
+                android:padding="6dp"
+                android:gravity="center"/>
+
+            <!-- Indicador de stock bajo -->
+            <LinearLayout
+                android:id="@+id/indicadorStock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/success"
+                android:padding="6dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_add"
+                    app:tint="@color/white"/>
+            </LinearLayout>
+
+            <!-- Indicador de stock bajo -->
+            <LinearLayout
+                android:id="@+id/indicadorStockBajo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/warning"
+                android:padding="6dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_remove"
+                    app:tint="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- NOMBRE DEL PRODUCTO -->
         <TextView
             android:id="@+id/tvNombreProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nombre del producto"
             android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="#406DE1"/>
+            android:textSize="18sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="4dp"/>
 
+        <!-- DESCRIPCIÓN -->
         <TextView
             android:id="@+id/tvDescripcionProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Descripción"
-            android:textSize="16sp"
-            android:textColor="#333"/>
-
-        <TextView
-            android:id="@+id/tvPrecioProducto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Precio: $0.00"
-            android:textSize="16sp"
-            android:textColor="#27ae60"/>
-
-        <TextView
-            android:id="@+id/tvStockProducto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Stock: 0"
-            android:textSize="16sp"
-            android:textColor="#e67e22"/>
-
-        <TextView
-            android:id="@+id/tvMonedaProducto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Moneda: USD"
             android:textSize="14sp"
-            android:textColor="#888"/>
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="12dp"
+            android:maxLines="2"
+            android:ellipsize="end"/>
 
+        <!-- INFORMACIÓN DE PRECIO Y STOCK -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end"
-            android:layout_marginTop="8dp">
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <!-- Precio -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_ventas"
+                    app:tint="@color/gold_primary"
+                    android:layout_marginEnd="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvPrecioProducto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S/ 0.00"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+            </LinearLayout>
+
+            <!-- Stock -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_cart"
+                    app:tint="@color/gold_primary"
+                    android:layout_marginEnd="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvStockProducto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stock: 0"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- INFORMACIÓN ADICIONAL -->
+        <TextView
+            android:id="@+id/tvMonedaProducto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categoría: Sin categoría"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
 
             <ImageButton
                 android:id="@+id/btnEditarProducto"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_menu_edit"
-                android:contentDescription="Editar"/>
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/success"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/white"
+                android:contentDescription="Editar"
+                android:layout_marginEnd="8dp"/>
 
             <ImageButton
                 android:id="@+id/btnEliminarProducto"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_menu_delete"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/white"
                 android:contentDescription="Eliminar"/>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
