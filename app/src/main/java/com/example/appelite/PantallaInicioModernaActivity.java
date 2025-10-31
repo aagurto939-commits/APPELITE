@@ -104,7 +104,7 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
         
         // Proveedores
         findViewById(R.id.cardProveedores).setOnClickListener(v -> {
-            // startActivity(new Intent(this, ProveedoresActivity.class));
+            startActivity(new Intent(this, ProveedoresActivity.class));
         });
         
         // Ventas
@@ -119,7 +119,7 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
         
         // Configuración
         findViewById(R.id.cardConfiguracion).setOnClickListener(v -> {
-            // startActivity(new Intent(this, ConfiguracionActivity.class));
+            mostrarMenuConfiguracion();
         });
     }
 
@@ -164,8 +164,7 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
             
         // PROVEEDORES
         } else if (id == R.id.nav_proveedores) {
-            Toast.makeText(this, "Gestión de Proveedores - En desarrollo", Toast.LENGTH_SHORT).show();
-            // TODO: Implementar ProveedoresActivity
+            startActivity(new Intent(this, ProveedoresActivity.class));
         } else if (id == R.id.nav_compras) {
             Toast.makeText(this, "Gestión de Compras - En desarrollo", Toast.LENGTH_SHORT).show();
             // TODO: Implementar ComprasActivity
@@ -176,8 +175,14 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
         // OTROS
         } else if (id == R.id.nav_reportes) {
             startActivity(new Intent(this, ReportesActivity.class));
+            
+        // CONFIGURACIÓN
+        } else if (id == R.id.nav_tipo_cambio) {
+            startActivity(new Intent(this, TipoCambioActivity.class));
         } else if (id == R.id.nav_configuracion) {
             // startActivity(new Intent(this, ConfiguracionActivity.class));
+        } else if (id == R.id.nav_configuracion_empresa) {
+            startActivity(new Intent(this, ConfiguracionEmpresaActivity.class));
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -220,6 +225,27 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
     public void onServiciosClick(android.view.View view) {
         startActivity(new Intent(this, ServiciosActivity.class));
     }
-}
     
-    // ...existing code...
+    // Método para mostrar menú de configuración
+    private void mostrarMenuConfiguracion() {
+        String[] opciones = {"Tipo de Cambio", "Configuración General", "Cerrar Sesión"};
+        
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle("Configuración")
+               .setItems(opciones, (dialog, which) -> {
+                   switch (which) {
+                       case 0: // Tipo de Cambio
+                           startActivity(new Intent(this, TipoCambioActivity.class));
+                           break;
+                       case 1: // Configuración General
+                           Toast.makeText(this, "Configuración General - En desarrollo", Toast.LENGTH_SHORT).show();
+                           break;
+                       case 2: // Cerrar Sesión
+                           // TODO: Implementar logout
+                           Toast.makeText(this, "Cerrar Sesión - En desarrollo", Toast.LENGTH_SHORT).show();
+                           break;
+                   }
+               })
+               .show();
+    }
+}

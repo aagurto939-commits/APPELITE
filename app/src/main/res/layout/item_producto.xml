@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
     android:backgroundTint="@color/white"
     android:foreground="?android:attr/selectableItemBackground"
     android:clickable="true"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="10dp">
 
         <!-- HEADER CON CÓDIGO Y ESTADO -->
         <LinearLayout
@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="4dp">
 
             <TextView
                 android:id="@+id/tvCodigoProducto"
@@ -79,9 +79,9 @@
             android:layout_height="wrap_content"
             android:text="Nombre del producto"
             android:textStyle="bold"
-            android:textSize="18sp"
+            android:textSize="15sp"
             android:textColor="@color/text_primary"
-            android:layout_marginBottom="4dp"/>
+            android:layout_marginBottom="2dp"/>
 
         <!-- DESCRIPCIÓN -->
         <TextView
@@ -89,9 +89,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Descripción"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/text_secondary"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="6dp"
             android:maxLines="2"
             android:ellipsize="end"/>
 
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="4dp">
 
             <!-- Precio -->
             <LinearLayout
@@ -123,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="S/ 0.00"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"/>
             </LinearLayout>
@@ -148,21 +148,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stock: 0"
-                    android:textSize="16sp"
+                    android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"/>
             </LinearLayout>
         </LinearLayout>
 
         <!-- INFORMACIÓN ADICIONAL -->
-        <TextView
-            android:id="@+id/tvMonedaProducto"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Categoría: Sin categoría"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="12dp"/>
+            android:orientation="horizontal"
+            android:layout_marginBottom="6dp">
+
+            <TextView
+                android:id="@+id/tvMarcaProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Marca: Sin marca"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"/>
+
+            <TextView
+                android:id="@+id/tvCategoriaProducto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Categoría: Sin categoría"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"/>
+        </LinearLayout>
 
         <!-- BOTONES DE ACCIÓN -->
         <LinearLayout
@@ -173,24 +189,26 @@
 
             <ImageButton
                 android:id="@+id/btnEditarProducto"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/circle_background"
                 android:backgroundTint="@color/success"
                 android:src="@drawable/ic_edit"
                 app:tint="@color/white"
                 android:contentDescription="Editar"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="4dp"
+                android:padding="6dp"/>
 
             <ImageButton
                 android:id="@+id/btnEliminarProducto"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:background="@drawable/circle_background"
                 android:backgroundTint="@android:color/holo_red_light"
                 android:src="@drawable/ic_delete"
                 app:tint="@color/white"
-                android:contentDescription="Eliminar"/>
+                android:contentDescription="Eliminar"
+                android:padding="6dp"/>
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

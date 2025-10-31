@@ -1,5 +1,6 @@
 package com.example.appelite;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +29,6 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
     private RecyclerView recyclerViewServicios;
     private LinearLayout layoutEmptyState;
     private Button btnProgramarServicio;
-    private FloatingActionButton fabAddServicio;
     private ImageButton btnBack, btnCalendario;
     
     private List<Servicio> serviciosHoy;
@@ -108,19 +107,20 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
     private void initializeViews() {
         System.out.println("DEBUG: 🔍 Iniciando inicialización de views...");
         
-        try {
-        tvFechaHoy = findViewById(R.id.tvFechaHoy);
-            System.out.println("DEBUG: ✅ tvFechaHoy encontrado");
-        } catch (Exception e) {
-            System.out.println("DEBUG: ❌ Error con tvFechaHoy: " + e.getMessage());
-        }
+        // TextViews eliminados del layout
+        // try {
+        // tvFechaHoy = findViewById(R.id.tvFechaHoy);
+        //     System.out.println("DEBUG: ✅ tvFechaHoy encontrado");
+        // } catch (Exception e) {
+        //     System.out.println("DEBUG: ❌ Error con tvFechaHoy: " + e.getMessage());
+        // }
         
-        try {
-        tvServiciosHoy = findViewById(R.id.tvServiciosHoy);
-            System.out.println("DEBUG: ✅ tvServiciosHoy encontrado");
-        } catch (Exception e) {
-            System.out.println("DEBUG: ❌ Error con tvServiciosHoy: " + e.getMessage());
-        }
+        // try {
+        // tvServiciosHoy = findViewById(R.id.tvServiciosHoy);
+        //     System.out.println("DEBUG: ✅ tvServiciosHoy encontrado");
+        // } catch (Exception e) {
+        //     System.out.println("DEBUG: ❌ Error con tvServiciosHoy: " + e.getMessage());
+        // }
         
         try {
         recyclerViewServicios = findViewById(R.id.recyclerViewServicios);
@@ -143,12 +143,6 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
             System.out.println("DEBUG: ❌ Error con btnProgramarServicio: " + e.getMessage());
         }
         
-        try {
-        fabAddServicio = findViewById(R.id.fabAddServicio);
-            System.out.println("DEBUG: ✅ fabAddServicio encontrado");
-        } catch (Exception e) {
-            System.out.println("DEBUG: ❌ Error con fabAddServicio: " + e.getMessage());
-        }
         
         try {
         btnBack = findViewById(R.id.btnBack);
@@ -239,10 +233,6 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
             return true;
         });
         
-        fabAddServicio.setOnClickListener(v -> {
-            Intent intent = new Intent(this, NuevoServicioActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void configurarFechaHoy() {
@@ -250,7 +240,7 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         
         // Fecha para mostrar
         SimpleDateFormat displayFormat = new SimpleDateFormat("d 'de' MMMM, yyyy", new Locale("es", "ES"));
-        tvFechaHoy.setText(displayFormat.format(calendar.getTime()));
+        // tvFechaHoy.setText(displayFormat.format(calendar.getTime()));
         
         // Fecha para filtrar (formato yyyy-MM-dd)
         SimpleDateFormat filterFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -373,7 +363,7 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         
         try {
         int count = serviciosHoy.size();
-        tvServiciosHoy.setText(count + (count == 1 ? " servicio programado" : " servicios programados"));
+        // tvServiciosHoy.setText(count + (count == 1 ? " servicio programado" : " servicios programados"));
             System.out.println("DEBUG: ✅ Contador actualizado: " + count + " servicios");
         
         if (serviciosHoy.isEmpty()) {
@@ -393,26 +383,77 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
 
     // Implementación de OnServicioClickListener
     @Override
-    public void onIniciarServicio(Servicio servicio) {
-        // Actualizar estado a "En Progreso"
-        servicio.setEstado("En Progreso");
-        serviciosRef.child(servicio.getId()).setValue(servicio);
-    }
-
-    @Override
-    public void onCompletarServicio(Servicio servicio) {
-        // Actualizar estado a "Completado"
-        servicio.setEstado("Completado");
-        serviciosRef.child(servicio.getId()).setValue(servicio);
+    public void onItemClick(Servicio servicio) {
+        // Cambiar estado Pendiente <-> Completado
+        cambiarEstadoServicio(servicio);
     }
 
     @Override
     public void onEditarServicio(Servicio servicio) {
-        // Abrir activity para editar servicio
+        // Ir directamente a editar sin confirmación
         Intent intent = new Intent(this, NuevoServicioActivity.class);
         intent.putExtra("servicio_id", servicio.getId());
         intent.putExtra("modo_edicion", true);
         startActivity(intent);
+    }
+
+    @Override
+    public void onEliminarServicio(Servicio servicio) {
+        // Mostrar diálogo de confirmación para eliminar
+        mostrarDialogoConfirmacionEliminar(servicio);
+    }
+
+    private void cambiarEstadoServicio(Servicio servicio) {
+        String nuevoEstado;
+        String mensaje;
+        
+        if ("Pendiente".equals(servicio.getEstado())) {
+            nuevoEstado = "Completado";
+            mensaje = "Servicio marcado como completado";
+        } else if ("Completado".equals(servicio.getEstado())) {
+            nuevoEstado = "Pendiente";
+            mensaje = "Servicio marcado como pendiente";
+        } else {
+            // Para otros estados, cambiar a Pendiente
+            nuevoEstado = "Pendiente";
+            mensaje = "Servicio marcado como pendiente";
+        }
+        
+        // Actualizar en Firebase
+        serviciosRef.child(servicio.getId()).child("estado").setValue(nuevoEstado)
+            .addOnSuccessListener(aVoid -> {
+                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+                // Actualizar el objeto local
+                servicio.setEstado(nuevoEstado);
+                adapter.notifyDataSetChanged();
+            })
+            .addOnFailureListener(e -> {
+                Toast.makeText(this, "Error al actualizar el estado", Toast.LENGTH_SHORT).show();
+            });
+    }
+
+    private void mostrarDialogoConfirmacionEliminar(Servicio servicio) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirmar Eliminación");
+        builder.setMessage("¿Estás seguro de que deseas eliminar el servicio para " + servicio.getCliente() + "?\n\nEsta acción no se puede deshacer.");
+        
+        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+            // Eliminar servicio de Firebase
+            serviciosRef.child(servicio.getId()).removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Servicio eliminado correctamente", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al eliminar el servicio", Toast.LENGTH_SHORT).show();
+                });
+        });
+        
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

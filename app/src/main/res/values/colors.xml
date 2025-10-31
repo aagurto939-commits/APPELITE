@@ -28,4 +28,7 @@
     <color name="success">#28A745</color>
     <color name="warning">#FFC107</color>
     <color name="error">#DC3545</color>
+    
+    <!-- Fondos -->
+    <color name="background_light">#F8F9FA</color>
 </resources>

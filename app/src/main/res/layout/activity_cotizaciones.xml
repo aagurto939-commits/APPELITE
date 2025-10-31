@@ -55,108 +55,261 @@
 
         </LinearLayout>
 
+        <!-- Botón de recarga para debug -->
         <ImageButton
-            android:id="@+id/btnAddCotizacion"
+            android:id="@+id/btnRecargar"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:background="@drawable/circle_background"
-            android:backgroundTint="@color/black"
-            android:src="@drawable/ic_add"
-            android:contentDescription="Nueva Cotización"
-            app:tint="@color/gold_primary"
+            android:backgroundTint="@color/gold_primary"
+            android:src="@drawable/ic_refresh"
+            android:contentDescription="Recargar"
+            app:tint="@color/black"
             android:padding="10dp" />
 
     </LinearLayout>
 
-    <!-- Filtros modernos -->
+    <!-- Filtros elegantes con iconos -->
     <LinearLayout
         android:id="@+id/layoutFiltros"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:background="@color/white"
-        android:elevation="4dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="8dp"
+        android:elevation="6dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/layoutHeader"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btnTodas"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="2dp"
-            android:text="Todas"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:background="@drawable/button_gold_background"
-            android:textAllCaps="false" />
+        <!-- Título de filtros -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-        <Button
-            android:id="@+id/btnPendientes"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="2dp"
-            android:text="Pendientes"
-            android:textColor="@color/text_primary"
-            android:textSize="12sp"
-            android:background="@drawable/edittext_modern_background"
-            android:textAllCaps="false" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_filter"
+                app:tint="@color/gold_primary"
+                android:layout_marginEnd="8dp" />
 
-        <Button
-            android:id="@+id/btnAceptadas"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="2dp"
-            android:text="Aceptadas"
-            android:textColor="@color/text_primary"
-            android:textSize="12sp"
-            android:background="@drawable/edittext_modern_background"
-            android:textAllCaps="false" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Filtrar cotizaciones"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnVencidas"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginHorizontal="2dp"
-            android:text="Vencidas"
-            android:textColor="@color/text_primary"
-            android:textSize="12sp"
-            android:background="@drawable/edittext_modern_background"
-            android:textAllCaps="false" />
+            <TextView
+                android:id="@+id/tvContadorFiltro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4 cotizaciones"
+                android:textColor="@color/gold_primary"
+                android:textSize="12sp"
+                android:background="@drawable/contador_filtro_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp" />
+
+        </LinearLayout>
+
+        <!-- Botones de filtro horizontales -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/btnTodas"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                android:orientation="horizontal"
+                android:background="@drawable/filter_button_active"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:elevation="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Todas"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnPendientes"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                android:orientation="horizontal"
+                android:background="@drawable/filter_button_inactive"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:elevation="2dp"
+                android:stateListAnimator="@null">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pendientes"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnAceptadas"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                android:orientation="horizontal"
+                android:background="@drawable/filter_button_inactive"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:elevation="2dp"
+                android:stateListAnimator="@null">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aceptadas"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnVencidas"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="3dp"
+                android:orientation="horizontal"
+                android:background="@drawable/filter_button_inactive"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:elevation="2dp"
+                android:stateListAnimator="@null">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vencidas"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Contenido principal con ScrollView -->
-    <ScrollView
+    <!-- Contenido principal elegante -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        android:backgroundTint="@color/white"
         app:layout_constraintTop_toBottomOf="@id/layoutFiltros"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:fillViewport="true">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <FrameLayout
             android:id="@+id/frameContent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
+            <!-- Header del contenido -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/gradient_gold_background"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/black"
+                    android:gravity="center"
+                    android:layout_marginEnd="12dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_assignment"
+                        app:tint="@color/gold_primary" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lista de Cotizaciones"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Gestiona todas tus cotizaciones"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <!-- Lista de cotizaciones -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCotizaciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:layout_marginTop="80dp"
+                android:padding="20dp"
                 android:clipToPadding="false"
                 android:paddingBottom="90dp" />
 
-            <!-- Estado vacío -->
+            <!-- Estado vacío mejorado -->
             <LinearLayout
                 android:id="@+id/layoutEmptyState"
                 android:layout_width="match_parent"
@@ -164,19 +317,21 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:visibility="gone"
-                android:padding="32dp">
+                android:layout_marginTop="60dp"
+                android:padding="48dp">
 
                 <LinearLayout
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:background="@drawable/circle_background"
                     android:backgroundTint="@color/gold_light"
                     android:gravity="center"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="24dp"
+                    android:elevation="4dp">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:src="@drawable/ic_assignment"
                         app:tint="@color/black" />
 
@@ -188,27 +343,40 @@
                     android:layout_height="wrap_content"
                     android:text="No hay cotizaciones"
                     android:textColor="@color/text_primary"
-                    android:textSize="18sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="12dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Crea tu primera cotización tocando el botón +"
+                    android:text="Crea tu primera cotización tocando el botón dorado"
                     android:textColor="@color/text_secondary"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:gravity="center"
-                    android:paddingHorizontal="32dp" />
+                    android:paddingHorizontal="32dp"
+                    android:lineSpacingExtra="4dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crear Cotización"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/button_gold_background"
+                    android:layout_marginTop="24dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="12dp" />
 
             </LinearLayout>
 
         </FrameLayout>
 
-    </ScrollView>
+    </androidx.cardview.widget.CardView>
 
-    <!-- FloatingActionButton dorado -->
+    <!-- FloatingActionButton elegante con sombra -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabNuevaCotizacion"
         android:layout_width="wrap_content"
@@ -217,8 +385,22 @@
         android:src="@drawable/ic_add"
         app:backgroundTint="@color/gold_primary"
         app:tint="@color/black"
-        app:elevation="12dp"
+        app:elevation="16dp"
+        app:pressedTranslationZ="8dp"
+        app:borderWidth="0dp"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Sombra adicional para el FAB -->
+    <View
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:background="@drawable/fab_shadow"
+        android:alpha="0.3"
+        app:layout_constraintBottom_toBottomOf="@id/fabNuevaCotizacion"
+        app:layout_constraintEnd_toEndOf="@id/fabNuevaCotizacion"
+        app:layout_constraintStart_toStartOf="@id/fabNuevaCotizacion"
+        app:layout_constraintTop_toTopOf="@id/fabNuevaCotizacion" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

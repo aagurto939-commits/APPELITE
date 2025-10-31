@@ -1,163 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ClientesActivity"
-    android:orientation="vertical"
-    android:background="#FAFAFA">
+    android:background="@drawable/servicios_background"
+    tools:context=".ClientesActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp"
-        android:fillViewport="true">
+    <!-- HEADER DORADO MODERNO -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="@drawable/gradient_gold_background"
+        android:gravity="center_vertical"
+        android:elevation="8dp"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Contenedor para todos los elementos -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/black"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Volver"
+            app:tint="@color/gold_primary"
+            android:padding="10dp" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
             android:orientation="vertical">
 
-    <!-- Título con sombra sutil y padding -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="10dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#3F51B5">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Clientes"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:padding="24dp"
-            android:fontFamily="sans-serif-medium"/>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Botones principales con íconos y texto debajo -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="24dp">
-
-        <!-- Botón Agregar -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" >
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnAgregar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                app:backgroundTint="#4CAF50"
-                android:src="@android:drawable/ic_input_add"
-                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clientes"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Agregar"
-                android:textColor="#4CAF50"
-                android:textSize="14sp"
-                android:layout_marginTop="6dp"
-                android:fontFamily="sans-serif-medium"/>
+                android:text="Gestión de Clientes"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+
         </LinearLayout>
 
-        <!-- Botón Editar -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnEditar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                app:backgroundTint="#2196F3"
-                android:src="@android:drawable/ic_menu_edit"
-                app:tint="@android:color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Editar"
-                android:textColor="#2196F3"
-                android:textSize="14sp"
-                android:layout_marginTop="6dp"
-                android:fontFamily="sans-serif-medium"/>
-        </LinearLayout>
-
-        <!-- Botón Eliminar -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnEliminar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                app:backgroundTint="#F44336"
-                android:src="@android:drawable/ic_menu_delete"
-                app:tint="@android:color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Eliminar"
-                android:textColor="#F44336"
-                android:textSize="14sp"
-                android:layout_marginTop="6dp"
-                android:fontFamily="sans-serif-medium"/>
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/btnBuscarCliente"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/black"
+            android:src="@drawable/ic_search"
+            android:contentDescription="Buscar"
+            app:tint="@color/gold_primary"
+            android:padding="8dp" />
     </LinearLayout>
 
-    <!-- Subtítulo Historial -->
-    <TextView
-        android:id="@+id/tvHistorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Historial de Clientes"
-        android:textSize="20sp"
-        android:textColor="#455A64"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp"
-        android:fontFamily="sans-serif-medium"/>
-
-    <!-- RecyclerView dentro de CardView con esquinas y sombra -->
-    <androidx.cardview.widget.CardView
+    <!-- CONTENIDO SCROLLABLE -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        android:background="#FFFFFF">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcClientes"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:padding="12dp" />
-    </androidx.cardview.widget.CardView>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Contador de clientes -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTotalClientes"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="12dp"
+                android:text="Total Clientes: 0"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textColor="@color/gold_primary"
+                android:textSize="14sp"
+                app:cornerRadius="24dp"
+                app:strokeColor="@color/gold_primary"
+                app:strokeWidth="2dp"
+                app:icon="@drawable/cliente"
+                app:iconTint="@color/gold_primary"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"/>
+
+            <!-- Botón agregar cliente -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAgregar"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="20dp"
+                android:text="+ Nuevo Cliente"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:cornerRadius="24dp"
+                app:backgroundTint="@color/success"
+                app:icon="@drawable/ic_add"
+                app:iconTint="@color/white"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp"/>
+
+            <!-- Buscador flotante -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="8dp"
+                android:backgroundTint="@color/white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="@color/gold_primary"
+                        android:layout_marginEnd="12dp"/>
+
+                    <EditText
+                        android:id="@+id/etBuscarCliente"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="Buscar clientes..."
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_secondary"
+                        android:textSize="16sp"
+                        android:inputType="text"
+                        android:imeOptions="actionSearch"/>
+
+                    <ImageButton
+                        android:id="@+id/btnLimpiarBusqueda"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/circle_background"
+                        android:backgroundTint="@color/text_secondary"
+                        android:src="@drawable/ic_remove"
+                        app:tint="@color/white"
+                        android:contentDescription="Limpiar"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Lista de Clientes -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lista de Clientes"
+                android:textSize="18sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- RecyclerView moderno -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcClientes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="84dp"
+                tools:listitem="@layout/item_cliente"/>
 
         </LinearLayout>
 
     </ScrollView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

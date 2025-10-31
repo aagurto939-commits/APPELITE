@@ -38,10 +38,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import com.example.appelite.models.Producto;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import androidx.core.content.FileProvider;
 
 public class ProductosActivity extends AppCompatActivity {
     
@@ -122,8 +129,17 @@ public class ProductosActivity extends AppCompatActivity {
             @Override public void afterTextChanged(Editable s) { }
         });
 
-        // 3) Descargar inventario (CSV sencillo)
-        btnDescargarInventario.setOnClickListener(v -> exportarCSV());
+        // Botón de buscar
+        MaterialButton btnBuscarProducto = findViewById(R.id.btnBuscarProducto);
+        if (btnBuscarProducto != null) {
+            btnBuscarProducto.setOnClickListener(v -> {
+                String texto = etBuscarProducto.getText().toString().trim();
+                filtrar(texto);
+            });
+        }
+
+        // 3) Descargar inventario (Excel)
+        btnDescargarInventario.setOnClickListener(v -> exportarExcel());
 
         // 4) Configurar filtros
         setupFiltros();
@@ -133,6 +149,9 @@ public class ProductosActivity extends AppCompatActivity {
         
         // 6) Configurar botón "Todas las categorías"
         btnTodasCategorias.setOnClickListener(v -> seleccionarCategoria("Todas las categorías"));
+        
+        // 7) Procesar categoría seleccionada desde CategoriasActivity
+        procesarCategoriaSeleccionada();
     }
 
     // Carga desde Firebase
@@ -207,46 +226,118 @@ public class ProductosActivity extends AppCompatActivity {
     }
 
     private void eliminarProducto(Producto producto) {
-        productosRef.child(producto.getId()).removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) Toast.makeText(this, "Producto eliminado", Toast.LENGTH_SHORT).show();
-            else Toast.makeText(this, "Error al eliminar", Toast.LENGTH_SHORT).show();
-        });
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar Producto")
+                .setMessage("¿Está seguro de eliminar este producto?\n\n" +
+                        "Producto: " + producto.getNombre() + "\n" +
+                        "Código: " + producto.getCodigo())
+                .setPositiveButton("Eliminar", (dialog, which) -> {
+                    productosRef.child(producto.getId()).removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "Error al eliminar producto", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
     }
 
-    // --- Exportación simple a CSV en almacenamiento privado de la app ---
-    private void exportarCSV() {
+    // --- Exportación a Excel (CSV formateado que Excel abre como tabla) ---
+    private void exportarExcel() {
         if (listaProductosOriginal.isEmpty()) {
             Toast.makeText(this, "No hay productos para exportar", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("id,nombre,descripcion,precio,stock,moneda\n");
-        for (Producto p : listaProductosOriginal) {
-            sb.append(s(p.getId())).append(',')
-                    .append(s(p.getNombre())).append(',')
-                    .append(s(p.getDescripcion())).append(',')
-                    .append(p.getPrecio()).append(',')
-                    .append(p.getStock()).append(',')
-                    .append(s(p.getMoneda()))
-                    .append('\n');
-        }
-
         try {
-            File dir = getExternalFilesDir(null); // /Android/data/<pkg>/files
-            if (dir == null) dir = getFilesDir();
-            File out = new File(dir, "inventario.csv");
-            try (FileOutputStream fos = new FileOutputStream(out)) {
-                fos.write(sb.toString().getBytes());
+            // Generar CSV formateado que Excel abre como tabla
+            StringBuilder sb = new StringBuilder();
+            
+            // BOM UTF-8 para que Excel reconozca la codificación correctamente
+            sb.append('\ufeff');
+            
+            // Encabezados con punto y coma (Excel lo reconoce como separador)
+            sb.append("ID;Código;Nombre;Descripción;Categoría;Marca;Precio Costo;Precio Venta;Stock;Stock Mínimo;Moneda;Fecha Creación\n");
+            
+            // Llenar datos de productos
+            for (Producto p : listaProductosOriginal) {
+                sb.append(escaparCSV(p.getId() != null ? p.getId() : "")).append(';');
+                sb.append(escaparCSV(p.getCodigo() != null ? p.getCodigo() : "")).append(';');
+                sb.append(escaparCSV(p.getNombre() != null ? p.getNombre() : "")).append(';');
+                sb.append(escaparCSV(p.getDescripcion() != null ? p.getDescripcion() : "")).append(';');
+                
+                // Categoría
+                String categoria = p.getCategoria();
+                if (categoria == null || categoria.isEmpty()) categoria = "Sin categoría";
+                sb.append(escaparCSV(categoria)).append(';');
+                
+                // Marca (si existe)
+                String marca = "";
+                try {
+                    marca = (String) p.getClass().getMethod("getMarca").invoke(p);
+                    if (marca == null) marca = "";
+                } catch (Exception e) {
+                    marca = "";
+                }
+                sb.append(escaparCSV(marca)).append(';');
+                
+                sb.append(p.getPrecioCosto()).append(';');
+                sb.append(p.getPrecio()).append(';');
+                sb.append(p.getStock()).append(';');
+                sb.append(p.getStockMinimo()).append(';');
+                sb.append(escaparCSV(p.getMoneda() != null ? p.getMoneda() : "")).append(';');
+                sb.append(escaparCSV(p.getFechaCreacion() != null ? p.getFechaCreacion() : ""));
+                sb.append('\n');
             }
-            Toast.makeText(this, "CSV exportado: " + out.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+            // Guardar archivo
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+            String timestamp = sdf.format(new Date());
+            String fileName = "Inventario_" + timestamp + ".csv";
+
+            File dir = getExternalFilesDir(null);
+            if (dir == null) dir = getFilesDir();
+            File csvFile = new File(dir, fileName);
+
+            FileOutputStream outputStream = new FileOutputStream(csvFile);
+            outputStream.write(sb.toString().getBytes("UTF-8"));
+            outputStream.close();
+
+            // Compartir archivo (Excel abrirá el CSV como tabla automáticamente)
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/csv");
+            
+            android.net.Uri fileUri = FileProvider.getUriForFile(
+                this,
+                getPackageName() + ".fileprovider",
+                csvFile
+            );
+            
+            shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Inventario de Productos");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Inventario exportado el " + 
+                new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()));
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            startActivity(Intent.createChooser(shareIntent, "Exportar inventario a..."));
+
+            Toast.makeText(this, "Inventario exportado exitosamente", Toast.LENGTH_SHORT).show();
+
         } catch (Exception e) {
-            Toast.makeText(this, "Error al exportar CSV", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            Toast.makeText(this, "Error al exportar: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
-    private String s(String v) {
-        return v == null ? "" : v.replace(",", " "); // evita romper CSV
+    
+    private String escaparCSV(String valor) {
+        if (valor == null) return "";
+        // Si contiene punto y coma o comillas, envolver en comillas y duplicar comillas internas
+        if (valor.contains(";") || valor.contains("\"") || valor.contains("\n")) {
+            return "\"" + valor.replace("\"", "\"\"") + "\"";
+        }
+        return valor;
     }
 
     private void setupFiltros() {
@@ -384,7 +475,7 @@ public class ProductosActivity extends AppCompatActivity {
             btn.setStrokeWidth(1);
         }
         
-        // Marcar el botón seleccionado
+        // Marcar el botón seleccionado比較
         if ("Todas las categorías".equals(categoriaSeleccionada)) {
             btnTodasCategorias.setTextColor(getResources().getColor(R.color.gold_primary));
             btnTodasCategorias.setStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.gold_primary)));
@@ -403,19 +494,21 @@ public class ProductosActivity extends AppCompatActivity {
     }
     
     private void filtrarPorCategoria(String categoria) {
-        if ("Todas las categorías".equals(categoria)) {
-            adapter.notifyDataSetChanged();
+        if ("Todas las categorías".equals(categoria) || "Todas".equals(categoria)) {
+            // Mostrar todos los productos
+            adapter.setProductos(listaProductosOriginal);
         } else {
             // Filtrar productos por categoría
             List<Producto> productosFiltrados = new ArrayList<>();
-            for (Producto producto : listaProductos) {
+            for (Producto producto : listaProductosOriginal) {
                 if (categoria.equals(producto.getCategoria())) {
                     productosFiltrados.add(producto);
                 }
             }
             // Actualizar la lista del adapter
-            adapter.notifyDataSetChanged();
+            adapter.setProductos(productosFiltrados);
         }
+        actualizarTotal();
     }
 
     private void aplicarFiltro(String tipoFiltro) {
@@ -444,9 +537,20 @@ public class ProductosActivity extends AppCompatActivity {
 
     private void filtrarConTipo(String query, String tipoFiltro) {
         String q = query.toLowerCase();
-        listaProductos.clear();
+        List<Producto> productosFiltrados = new ArrayList<>();
 
-        for (Producto p : listaProductosOriginal) {
+        // Determinar la lista base según la categoría seleccionada
+        List<Producto> listaBase = listaProductosOriginal;
+        if (!"Todas las categorías".equals(categoriaSeleccionada) && !"Todas".equals(categoriaSeleccionada)) {
+            listaBase = new ArrayList<>();
+            for (Producto producto : listaProductosOriginal) {
+                if (categoriaSeleccionada.equals(producto.getCategoria())) {
+                    listaBase.add(producto);
+                }
+            }
+        }
+
+        for (Producto p : listaBase) {
             boolean coincideTexto = q.isEmpty() || 
                 (p.getNombre() != null && p.getNombre().toLowerCase().contains(q)) ||
                 (p.getDescripcion() != null && p.getDescripcion().toLowerCase().contains(q)) ||
@@ -468,11 +572,11 @@ public class ProductosActivity extends AppCompatActivity {
             }
 
             if (coincideTexto && coincideFiltro) {
-                listaProductos.add(p);
+                productosFiltrados.add(p);
             }
         }
 
-        adapter.setProductos(listaProductos);
+        adapter.setProductos(productosFiltrados);
         actualizarTotal();
     }
 
@@ -482,6 +586,15 @@ public class ProductosActivity extends AppCompatActivity {
         else if (chipSinStock.isChecked()) tipoFiltro = "sin_stock";
 
         filtrarConTipo(query, tipoFiltro);
+    }
+    
+    private void procesarCategoriaSeleccionada() {
+        String categoriaSeleccionadaExtra = getIntent().getStringExtra("categoria_seleccionada");
+        if (categoriaSeleccionadaExtra != null && !categoriaSeleccionadaExtra.isEmpty()) {
+            // Seleccionar automáticamente la categoría
+            categoriaSeleccionada = categoriaSeleccionadaExtra;
+            seleccionarCategoria(categoriaSeleccionadaExtra);
+        }
     }
     
     @Override

@@ -1,76 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="8dp"
-    android:layout_marginHorizontal="12dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
-    android:backgroundTint="#FFFFFF">
+    app:cardElevation="4dp"
+    android:backgroundTint="@color/white"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="20dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Imagen o logo del cliente -->
-        <ImageView
-            android:id="@+id/imgClienteLogo"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="16dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/cliente"
-            android:background="@drawable/circle_background" />
-
-        <!-- Contenedor de textos -->
+        <!-- Header con avatar y tipo de documento -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
 
-            <!-- Tipo y Número de Documento -->
+            <!-- Avatar del cliente -->
+            <LinearLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/circle_background"
+                android:backgroundTint="@color/gold_primary"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imgClienteLogo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/cliente"
+                    app:tint="@color/white"/>
+            </LinearLayout>
+
+            <!-- Contenedor de información principal -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Nombre o Razón Social -->
+                <TextView
+                    android:id="@+id/txtNombreCompleto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Juan Pérez"
+                    android:textColor="@color/text_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp" />
+
+                <!-- Tipo y Número de Documento (sin fondo) -->
+                <TextView
+                    android:id="@+id/txtDocumentoCompleto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DNI: 12345678"
+                    android:textColor="@color/gold_primary"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Botones de acción -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="8dp">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/txtTipoDocumento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DNI"
-                    android:textColor="#1E88E5"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
+                <ImageButton
+                    android:id="@+id/btnEditarCliente"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/success"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/white"
+                    android:contentDescription="Editar"
+                    android:layout_marginEnd="6dp"/>
 
-                <TextView
-                    android:id="@+id/txtNumeroDocumento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=": 12345678"
-                    android:textColor="#1E88E5"
-                    android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:layout_marginStart="4dp" />
+                <ImageButton
+                    android:id="@+id/btnEliminarCliente"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@android:color/holo_red_light"
+                    android:src="@drawable/ic_delete"
+                    app:tint="@color/white"
+                    android:contentDescription="Eliminar"/>
             </LinearLayout>
+        </LinearLayout>
 
-            <!-- Nombre o Razón Social -->
-            <TextView
-                android:id="@+id/txtNombreCompleto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Juan Pérez"
-                android:textColor="#212121"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp" />
+        <!-- Información de contacto (vertical) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
 
             <!-- Teléfono -->
             <LinearLayout
@@ -78,24 +113,24 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layoutDirection="ltr"
-                >
+                android:layout_marginBottom="6dp">
 
                 <ImageView
                     android:id="@+id/imgTelefono"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_menu_call"
-                    app:tint="#616161" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/text_secondary"
+                    android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/txtTelefono"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="987654321"
-                    android:textColor="#616161"
-                    android:textSize="14sp"
-                    android:layout_marginStart="6dp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <!-- Correo -->
@@ -103,26 +138,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="6dp">
+                android:gravity="center_vertical">
 
                 <ImageView
                     android:id="@+id/imgCorreo"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@android:drawable/ic_dialog_email"
-                    app:tint="#616161" />
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_email"
+                    app:tint="@color/text_secondary"
+                    android:layout_marginEnd="8dp" />
 
                 <TextView
                     android:id="@+id/txtCorreo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="cliente@mail.com"
-                    android:textColor="#616161"
-                    android:textSize="14sp"
-                    android:layout_marginStart="6dp" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

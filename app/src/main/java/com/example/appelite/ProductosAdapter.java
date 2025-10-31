@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.appelite.models.Producto;
+
 import java.util.List;
 
 public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.ProductoViewHolder> {
@@ -76,14 +78,12 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             holder.tvStock.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.warning));
         }
         
-        // Información adicional
-        String infoAdicional = "";
-        if (producto.getCategoria() != null && !producto.getCategoria().isEmpty()) {
-            infoAdicional = "Categoría: " + producto.getCategoria();
-        } else {
-            infoAdicional = "Moneda: " + (moneda.equals("USD") ? "Dólares" : "Soles");
-        }
-        holder.tvMoneda.setText(infoAdicional);
+        // Información adicional - Marca y Categoría
+        String marca = producto.getMarca() != null && !producto.getMarca().isEmpty() ? producto.getMarca() : "Sin marca";
+        String categoria = producto.getCategoria() != null && !producto.getCategoria().isEmpty() ? producto.getCategoria() : "Sin categoría";
+        
+        holder.tvMarca.setText("Marca: " + marca);
+        holder.tvCategoria.setText("Categoría: " + categoria);
         
         // Listeners
         holder.btnEditar.setOnClickListener(v -> listener.onEditar(producto));
@@ -101,7 +101,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     }
 
     static class ProductoViewHolder extends RecyclerView.ViewHolder {
-        TextView tvCodigo, tvNombre, tvDescripcion, tvPrecio, tvStock, tvMoneda;
+        TextView tvCodigo, tvNombre, tvDescripcion, tvPrecio, tvStock, tvMarca, tvCategoria;
         ImageButton btnEditar, btnEliminar;
         LinearLayout indicadorStock, indicadorStockBajo;
         
@@ -112,7 +112,8 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
             tvDescripcion = itemView.findViewById(R.id.tvDescripcionProducto);
             tvPrecio = itemView.findViewById(R.id.tvPrecioProducto);
             tvStock = itemView.findViewById(R.id.tvStockProducto);
-            tvMoneda = itemView.findViewById(R.id.tvMonedaProducto);
+            tvMarca = itemView.findViewById(R.id.tvMarcaProducto);
+            tvCategoria = itemView.findViewById(R.id.tvCategoriaProducto);
             btnEditar = itemView.findViewById(R.id.btnEditarProducto);
             btnEliminar = itemView.findViewById(R.id.btnEliminarProducto);
             indicadorStock = itemView.findViewById(R.id.indicadorStock);

@@ -209,31 +209,54 @@
                     app:tint="@color/white"/>
             </LinearLayout>
 
-            <!-- Buscador moderno -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tiBuscar"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <!-- Buscador mejorado como proveedores -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="16dp"
-                app:boxStrokeColor="@color/gold_primary"
-                app:boxCornerRadiusTopStart="16dp"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusBottomStart="16dp"
-                app:boxCornerRadiusBottomEnd="16dp"
-                app:hintTextColor="@color/gold_primary"
-                app:endIconTint="@color/gold_primary"
-                app:endIconDrawable="@drawable/icons8_buscar_64"
-                app:endIconMode="custom"
-                android:hint="Buscar productos...">
+                android:gravity="center_vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etBuscarProducto"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tiBuscar"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:textColor="@color/text_primary"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_weight="1"
+                    android:layout_marginEnd="12dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/gold_primary"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:hintTextColor="@color/gold_primary"
+                    android:hint="Buscar productos...">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBuscarProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnBuscarProducto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:text="Buscar"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:cornerRadius="16dp"
+                    app:backgroundTint="@color/gold_primary"
+                    app:icon="@drawable/ic_search"
+                    app:iconTint="@color/white"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"/>
+            </LinearLayout>
 
             <!-- FILTROS CON COLORES VARIADOS -->
             <LinearLayout
@@ -300,15 +323,18 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="12dp"
-        android:layout_marginBottom="84dp"
+        android:layout_marginBottom="16dp"
         tools:listitem="@layout/item_producto"/>
 
-    <!-- Botón Crear producto moderno -->
+    <!-- Botón Crear producto DENTRO del scroll -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCrearProducto"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:text="Crear Nuevo Producto"
         android:textStyle="bold"
         android:textAllCaps="false"

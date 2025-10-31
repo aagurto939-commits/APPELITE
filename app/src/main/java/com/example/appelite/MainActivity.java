@@ -102,12 +102,30 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            // Error en login
-                            String errorMessage = task.getException() != null ? 
-                                task.getException().getMessage() : "Error de autenticación";
+                            // Error en login - Manejo mejorado
+                            String errorMessage = "Error de conexión";
+                            if (task.getException() != null) {
+                                String exceptionMessage = task.getException().getMessage();
+                                if (exceptionMessage != null) {
+                                    if (exceptionMessage.contains("network") || exceptionMessage.contains("timeout")) {
+                                        errorMessage = "Sin conexión a internet. Verifica tu red.";
+                                    } else if (exceptionMessage.contains("INVALID_LOGIN_CREDENTIALS")) {
+                                        errorMessage = "Email o contraseña incorrectos";
+                                    } else if (exceptionMessage.contains("USER_NOT_FOUND")) {
+                                        errorMessage = "Usuario no encontrado";
+                                    } else {
+                                        errorMessage = exceptionMessage;
+                                    }
+                                }
+                            }
                             Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
                         }
                     }
+                })
+                .addOnFailureListener(e -> {
+                    btnLogin.setText("Iniciar Sesión");
+                    btnLogin.setEnabled(true);
+                    Toast.makeText(MainActivity.this, "Error de conexión: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 }
