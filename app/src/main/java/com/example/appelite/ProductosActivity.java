@@ -206,6 +206,7 @@ public class ProductosActivity extends AppCompatActivity {
             intent.putExtra("producto_stock", productoEditar.getStock());
             intent.putExtra("producto_stock_minimo", productoEditar.getStockMinimo());
             intent.putExtra("producto_categoria", productoEditar.getCategoria());
+            intent.putExtra("producto_marca", productoEditar.getMarca() != null ? productoEditar.getMarca() : "");
             intent.putExtra("producto_moneda", productoEditar.getMoneda());
         }
         

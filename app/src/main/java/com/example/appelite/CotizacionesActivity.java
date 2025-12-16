@@ -331,6 +331,21 @@ public class CotizacionesActivity extends AppCompatActivity {
         venta.setCotizacionId(cotizacion.getId()); // Referencia a la cotización original
         venta.setCotizacionCorrelativo(cotizacion.getCorrelativo()); // Guardar el correlativo de la cotización
         
+        // Guardar campos de conversión de moneda para calcular correctamente el total en soles
+        String monedaOriginal = cotizacion.getMoneda().contains("SOLES") ? "PEN" : "USD";
+        venta.setMonedaOriginal(monedaOriginal);
+        venta.setTotalOriginal(cotizacion.getTotal());
+        venta.setTipoCambioUsado(cotizacion.getTipoCambio());
+        
+        // Calcular y guardar total en soles
+        double totalEnSoles;
+        if ("USD".equals(monedaOriginal) && cotizacion.getTipoCambio() > 0) {
+            totalEnSoles = cotizacion.getTotal() * cotizacion.getTipoCambio();
+        } else {
+            totalEnSoles = cotizacion.getTotal(); // Ya está en soles
+        }
+        venta.setTotalEnSoles(totalEnSoles);
+        
         // Guardar en Firebase en el nodo "ventas" (sin userId para que aparezca en VerVentasActivity)
         DatabaseReference ventasRef = FirebaseDatabase.getInstance().getReference("ventas");
         String ventaId = ventasRef.push().getKey();
@@ -705,10 +720,20 @@ public class CotizacionesActivity extends AppCompatActivity {
                         }
                         
                         // Actualizar estado automáticamente si está vencida
-                        if (cotizacion.estaVencida() && !"ACEPTADA".equals(cotizacion.getEstado()) && !"VENCIDA".equals(cotizacion.getEstado())) {
+                        // IMPORTANTE: Solo marcar como VENCIDA si realmente está vencida (fecha anterior a hoy)
+                        if (cotizacion.estaVencida() && !"ACEPTADA".equals(cotizacion.getEstado())) {
+                            String estadoAnterior = cotizacion.getEstado();
                             cotizacion.setEstado("VENCIDA");
                             cotizacionesRef.child(cotizacion.getId()).child("estado").setValue("VENCIDA");
-                            System.out.println("DEBUG: Cotización " + cotizacion.getCorrelativo() + " marcada como VENCIDA automáticamente");
+                            System.out.println("DEBUG: Cotización " + cotizacion.getCorrelativo() + 
+                                             " marcada como VENCIDA automáticamente (estado anterior: " + estadoAnterior + 
+                                             ", fecha vencimiento: " + cotizacion.getFechaVencimiento() + ")");
+                        } else if (!cotizacion.estaVencida() && "VENCIDA".equals(cotizacion.getEstado()) && !"ACEPTADA".equals(cotizacion.getEstado())) {
+                            // Si NO está vencida pero tiene estado VENCIDA, corregir a PENDIENTE
+                            cotizacion.setEstado("PENDIENTE");
+                            cotizacionesRef.child(cotizacion.getId()).child("estado").setValue("PENDIENTE");
+                            System.out.println("DEBUG: Cotización " + cotizacion.getCorrelativo() + 
+                                             " corregida de VENCIDA a PENDIENTE (fecha vencimiento: " + cotizacion.getFechaVencimiento() + ")");
                         }
                         
                         cotizaciones.add(cotizacion);

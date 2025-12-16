@@ -5,6 +5,7 @@ public class Producto {
     private String nombre;
     private String codigo;
     private String categoria;
+    private String marca;
     private double precioCosto;
     private double precioVenta;
     private String moneda;
@@ -76,6 +77,14 @@ public class Producto {
     
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+    
+    public String getMarca() {
+        return marca;
+    }
+    
+    public void setMarca(String marca) {
+        this.marca = marca;
     }
     
     public double getPrecioCosto() {

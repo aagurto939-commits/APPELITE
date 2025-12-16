@@ -236,19 +236,50 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String fechaHoy = sdf.format(new Date());
         
+        System.out.println("DEBUG cargarVentasHoy: Buscando ventas con fecha: " + fechaHoy);
+        
         ventasRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 double totalVentas = 0.0;
+                int ventasEncontradas = 0;
                 
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     Venta venta = ds.getValue(Venta.class);
-                    if (venta != null && fechaHoy.equals(venta.getFechaVenta())) {
-                        // Obtener total en soles
-                        double totalEnSoles = venta.obtenerTotalEnSoles();
-                        totalVentas += totalEnSoles;
+                    if (venta != null) {
+                        String fechaVenta = venta.getFechaVenta();
+                        
+                        // Normalizar fecha de venta (puede venir con espacios o en diferentes formatos)
+                        if (fechaVenta != null) {
+                            fechaVenta = fechaVenta.trim();
+                            // Si tiene espacio, tomar solo la parte de la fecha
+                            if (fechaVenta.contains(" ")) {
+                                fechaVenta = fechaVenta.split(" ")[0];
+                            }
+                            // Si tiene coma, tomar solo la parte de la fecha
+                            if (fechaVenta.contains(",")) {
+                                fechaVenta = fechaVenta.split(",")[0];
+                            }
+                        }
+                        
+                        System.out.println("DEBUG cargarVentasHoy: Venta ID=" + ds.getKey() + 
+                                         ", fechaVenta=" + venta.getFechaVenta() + 
+                                         ", fechaNormalizada=" + fechaVenta + 
+                                         ", fechaHoy=" + fechaHoy);
+                        
+                        // Comparar fechas normalizadas
+                        if (fechaHoy.equals(fechaVenta)) {
+                            // Obtener total en soles
+                            double totalEnSoles = venta.obtenerTotalEnSoles();
+                            System.out.println("DEBUG cargarVentasHoy: Venta encontrada - totalEnSoles=" + totalEnSoles);
+                            totalVentas += totalEnSoles;
+                            ventasEncontradas++;
+                        }
                     }
                 }
+                
+                System.out.println("DEBUG cargarVentasHoy: Total ventas encontradas: " + ventasEncontradas + 
+                                 ", Total en soles: " + totalVentas);
                 
                 // Formatear el total
                 DecimalFormat df = new DecimalFormat("#,##0.00");
@@ -259,6 +290,7 @@ public class PantallaInicioModernaActivity extends AppCompatActivity
             
             @Override
             public void onCancelled(DatabaseError error) {
+                System.out.println("DEBUG cargarVentasHoy: Error - " + error.getMessage());
                 if (tvTotalVentasHoy != null) {
                     tvTotalVentasHoy.setText("S/ 0.00");
                 }
