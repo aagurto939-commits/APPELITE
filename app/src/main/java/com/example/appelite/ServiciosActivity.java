@@ -3,14 +3,22 @@ package com.example.appelite;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,6 +51,8 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         super.onCreate(savedInstanceState);
         System.out.println("DEBUG: 🚀 ServiciosActivity onCreate iniciado");
         
+        EdgeToEdge.enable(this);
+
         try {
         setContentView(R.layout.activity_servicios);
             System.out.println("DEBUG: ✅ Layout cargado exitosamente");
@@ -52,6 +62,8 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
             return;
         }
 
+        aplicarWindowInsets();
+
         try {
         initializeViews();
             System.out.println("DEBUG: ✅ Views inicializados");
@@ -60,6 +72,7 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
             e.printStackTrace();
             return;
         }
+
 
         try {
         setupFirebase();
@@ -107,20 +120,22 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
     private void initializeViews() {
         System.out.println("DEBUG: 🔍 Iniciando inicialización de views...");
         
-        // TextViews eliminados del layout
-        // try {
-        // tvFechaHoy = findViewById(R.id.tvFechaHoy);
-        //     System.out.println("DEBUG: ✅ tvFechaHoy encontrado");
-        // } catch (Exception e) {
-        //     System.out.println("DEBUG: ❌ Error con tvFechaHoy: " + e.getMessage());
-        // }
+        try {
+            tvFechaHoy = findViewById(R.id.tvFechaHoy);
+            System.out.println("DEBUG: ✅ tvFechaHoy encontrado");
+        } catch (Exception e) {
+            System.out.println("DEBUG: ❌ Error con tvFechaHoy: " + e.getMessage());
+        }
         
-        // try {
-        // tvServiciosHoy = findViewById(R.id.tvServiciosHoy);
-        //     System.out.println("DEBUG: ✅ tvServiciosHoy encontrado");
-        // } catch (Exception e) {
-        //     System.out.println("DEBUG: ❌ Error con tvServiciosHoy: " + e.getMessage());
-        // }
+        try {
+            tvServiciosHoy = findViewById(R.id.tvServiciosHoy);
+            System.out.println("DEBUG: ✅ tvServiciosHoy encontrado");
+        } catch (Exception e) {
+            System.out.println("DEBUG: ❌ Error con tvServiciosHoy: " + e.getMessage());
+        }
+        if (tvServiciosHoy != null) {
+            tvServiciosHoy.setText("0 servicios programados");
+        }
         
         try {
         recyclerViewServicios = findViewById(R.id.recyclerViewServicios);
@@ -157,9 +172,20 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         } catch (Exception e) {
             System.out.println("DEBUG: ❌ Error con btnCalendario: " + e.getMessage());
         }
-        
+
         serviciosHoy = new ArrayList<>();
         System.out.println("DEBUG: ✅ Todos los views inicializados correctamente");
+    }
+
+    private void aplicarWindowInsets() {
+        View main = findViewById(R.id.main);
+        if (main != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(main, (v, insets) -> {
+                Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                return insets;
+            });
+        }
     }
 
     private void setupFirebase() {
@@ -240,7 +266,9 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         
         // Fecha para mostrar
         SimpleDateFormat displayFormat = new SimpleDateFormat("d 'de' MMMM, yyyy", new Locale("es", "ES"));
-        // tvFechaHoy.setText(displayFormat.format(calendar.getTime()));
+        if (tvFechaHoy != null) {
+            tvFechaHoy.setText(displayFormat.format(calendar.getTime()));
+        }
         
         // Fecha para filtrar (formato yyyy-MM-dd)
         SimpleDateFormat filterFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -304,14 +332,18 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
                                     
                                     // Solo procesar si es un objeto, no un string
                                     if (!(value instanceof String)) {
-                    Servicio servicio = snapshot.getValue(Servicio.class);
-                    if (servicio != null) {
-                        servicio.setId(snapshot.getKey());
-                                            System.out.println("DEBUG: ✅ Servicio creado: " + servicio.getCliente());
+                                        Servicio servicio = snapshot.getValue(Servicio.class);
+                                        if (servicio != null) {
+                                            servicio.setId(snapshot.getKey());
+                                            String fechaServicio = normalizarFecha(servicio.getFecha());
+                                            System.out.println("DEBUG: ✅ Servicio creado: " + servicio.getCliente() + " - Fecha: " + fechaServicio);
                                             
-                        // Mostrar TODOS los servicios (no solo los de hoy)
-                            serviciosHoy.add(servicio);
-                        System.out.println("DEBUG: ✅ Servicio agregado: " + servicio.getCliente() + " (Fecha: " + servicio.getFecha() + ")");
+                                            if (fechaServicio != null && fechaServicio.equals(fechaHoy)) {
+                                                serviciosHoy.add(servicio);
+                                                System.out.println("DEBUG: ✅ Servicio agregado para hoy: " + servicio.getCliente());
+                                            } else {
+                                                System.out.println("DEBUG: ⏭️ Servicio descartado (fecha distinta): " + servicio.getFecha());
+                                            }
                                         } else {
                                             System.out.println("DEBUG: ❌ Servicio es null");
                                         }
@@ -363,7 +395,9 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         
         try {
         int count = serviciosHoy.size();
-        // tvServiciosHoy.setText(count + (count == 1 ? " servicio programado" : " servicios programados"));
+        if (tvServiciosHoy != null) {
+            tvServiciosHoy.setText(count + (count == 1 ? " servicio programado" : " servicios programados"));
+        }
             System.out.println("DEBUG: ✅ Contador actualizado: " + count + " servicios");
         
         if (serviciosHoy.isEmpty()) {
@@ -381,53 +415,89 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         }
     }
 
-    // Implementación de OnServicioClickListener
-    @Override
-    public void onItemClick(Servicio servicio) {
-        // Cambiar estado Pendiente <-> Completado
-        cambiarEstadoServicio(servicio);
-    }
-
     @Override
     public void onEditarServicio(Servicio servicio) {
-        // Ir directamente a editar sin confirmación
-        Intent intent = new Intent(this, NuevoServicioActivity.class);
-        intent.putExtra("servicio_id", servicio.getId());
-        intent.putExtra("modo_edicion", true);
-        startActivity(intent);
+        if (servicio == null) {
+            Toast.makeText(this, "Servicio no disponible", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("ServiciosActivity", "Solicitando editar servicio: " + servicio.getId());
+        mostrarDialogoConfirmacionEditar(servicio);
     }
 
     @Override
     public void onEliminarServicio(Servicio servicio) {
         // Mostrar diálogo de confirmación para eliminar
+        if (servicio == null) {
+            Toast.makeText(this, "Servicio no disponible", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("ServiciosActivity", "Solicitando eliminar servicio: " + servicio.getId());
         mostrarDialogoConfirmacionEliminar(servicio);
     }
 
-    private void cambiarEstadoServicio(Servicio servicio) {
-        String nuevoEstado;
-        String mensaje;
-        
-        if ("Pendiente".equals(servicio.getEstado())) {
-            nuevoEstado = "Completado";
-            mensaje = "Servicio marcado como completado";
-        } else if ("Completado".equals(servicio.getEstado())) {
-            nuevoEstado = "Pendiente";
-            mensaje = "Servicio marcado como pendiente";
-        } else {
-            // Para otros estados, cambiar a Pendiente
-            nuevoEstado = "Pendiente";
-            mensaje = "Servicio marcado como pendiente";
+    @Override
+    public void onEstadoServicio(Servicio servicio) {
+        if (servicio == null) {
+            Toast.makeText(this, "Servicio no disponible", Toast.LENGTH_SHORT).show();
+            return;
         }
-        
-        // Actualizar en Firebase
+        Log.d("ServiciosActivity", "Solicitando cambio de estado: " + servicio.getId() + " estado actual: " + servicio.getEstado());
+        mostrarDialogoConfirmacionEstado(servicio);
+    }
+
+    private void mostrarDialogoConfirmacionEditar(Servicio servicio) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Actualizar servicio");
+        builder.setMessage("¿Deseas editar el servicio programado para " + servicio.getCliente() + " el " +
+                (servicio.getFecha() != null ? servicio.getFecha() : "-") + " a las " +
+                (servicio.getHora() != null ? servicio.getHora() : "-") + "?");
+        builder.setPositiveButton("Editar", (dialog, which) -> {
+            Log.d("ServiciosActivity", "Confirmada edición de servicio: " + servicio.getId());
+            Intent intent = new Intent(this, NuevoServicioActivity.class);
+            intent.putExtra("servicio_id", servicio.getId());
+            intent.putExtra("modo_edicion", true);
+            startActivity(intent);
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void mostrarDialogoConfirmacionEstado(Servicio servicio) {
+        String estadoActual = servicio.getEstado() != null ? servicio.getEstado() : "Pendiente";
+        boolean esCompletado = "Completado".equalsIgnoreCase(estadoActual);
+        String nuevoEstado = esCompletado ? "Pendiente" : "Completado";
+        String titulo = esCompletado ? "Marcar como pendiente" : "Marcar como completado";
+        String mensaje = esCompletado
+                ? "¿Deseas marcar nuevamente como pendiente el servicio para " + servicio.getCliente() + "?"
+                : "¿Confirmas que el servicio para " + servicio.getCliente() + " ya fue completado?";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(titulo);
+        builder.setMessage(mensaje);
+        builder.setPositiveButton(esCompletado ? "Sí, marcar pendiente" : "Sí, marcar completado",
+                (dialog, which) -> actualizarEstadoServicio(servicio, nuevoEstado));
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void actualizarEstadoServicio(Servicio servicio, String nuevoEstado) {
+        Log.d("ServiciosActivity", "Actualizando estado servicio: " + servicio.getId() + " -> " + nuevoEstado);
         serviciosRef.child(servicio.getId()).child("estado").setValue(nuevoEstado)
             .addOnSuccessListener(aVoid -> {
-                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
-                // Actualizar el objeto local
                 servicio.setEstado(nuevoEstado);
                 adapter.notifyDataSetChanged();
+                String mensaje = "Completado".equalsIgnoreCase(nuevoEstado)
+                        ? "Servicio marcado como completado"
+                        : "Servicio marcado como pendiente";
+                Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
+                Log.d("ServiciosActivity", "Estado actualizado correctamente para servicio: " + servicio.getId());
+                sincronizarCentroNotificaciones();
             })
             .addOnFailureListener(e -> {
+                Log.e("ServiciosActivity", "Error actualizando estado: " + e.getMessage());
                 Toast.makeText(this, "Error al actualizar el estado", Toast.LENGTH_SHORT).show();
             });
     }
@@ -435,16 +505,25 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
     private void mostrarDialogoConfirmacionEliminar(Servicio servicio) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirmar Eliminación");
-        builder.setMessage("¿Estás seguro de que deseas eliminar el servicio para " + servicio.getCliente() + "?\n\nEsta acción no se puede deshacer.");
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("Servicio: ").append(servicio.getCliente() != null ? servicio.getCliente() : "-").append("\n");
+        mensaje.append("Fecha: ").append(servicio.getFecha() != null ? servicio.getFecha() : "-").append("\n");
+        mensaje.append("Hora: ").append(servicio.getHora() != null ? servicio.getHora() : "-").append("\n\n");
+        mensaje.append("Estas seguro de que deseas eliminar este servicio?\nEsta accion no se puede deshacer.");
+        builder.setMessage(mensaje.toString());
         
         builder.setPositiveButton("Eliminar", (dialog, which) -> {
+            Log.d("ServiciosActivity", "Confirmada eliminación de servicio: " + servicio.getId());
             // Eliminar servicio de Firebase
             serviciosRef.child(servicio.getId()).removeValue()
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Servicio eliminado correctamente", Toast.LENGTH_SHORT).show();
+                    Log.d("ServiciosActivity", "Servicio eliminado correctamente: " + servicio.getId());
+                    sincronizarCentroNotificaciones();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al eliminar el servicio", Toast.LENGTH_SHORT).show();
+                    Log.e("ServiciosActivity", "Error al eliminar servicio: " + e.getMessage());
                 });
         });
         
@@ -538,6 +617,20 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
         }
     }
 
+    private void sincronizarCentroNotificaciones() {
+        NotificationGenerator.syncAll(this, nuevas -> {
+            if (nuevas == null || nuevas.isEmpty()) {
+                return;
+            }
+            runOnUiThread(() -> {
+                NotificationHelper.createNotificationChannel(this);
+                for (Notificacion notificacion : nuevas) {
+                    NotificationHelper.showNotification(this, notificacion);
+                }
+            });
+        });
+    }
+
     private void limpiarDatosCorruptos() {
         System.out.println("DEBUG: 🧹 INICIANDO LIMPIEZA DE DATOS CORRUPTOS");
         
@@ -570,5 +663,25 @@ public class ServiciosActivity extends AppCompatActivity implements ServiciosAda
                 System.out.println("DEBUG: ❌ Error en limpieza: " + databaseError.getMessage());
             }
         });
+    }
+
+    private String normalizarFecha(String fecha) {
+        if (fecha == null || fecha.trim().isEmpty()) {
+            return null;
+        }
+        String limpia = fecha.trim();
+        try {
+            SimpleDateFormat formatoIso = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            return formatoIso.format(formatoIso.parse(limpia));
+        } catch (Exception e) {
+            try {
+                SimpleDateFormat formatoDia = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                SimpleDateFormat formatoIso = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                return formatoIso.format(formatoDia.parse(limpia));
+            } catch (Exception ex) {
+                System.out.println("DEBUG: ❌ No se pudo normalizar la fecha: " + fecha);
+                return null;
+            }
+        }
     }
 }

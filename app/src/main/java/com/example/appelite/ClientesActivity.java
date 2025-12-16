@@ -8,9 +8,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +42,13 @@ public class ClientesActivity extends AppCompatActivity implements ClientesAdapt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_clientes);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         recyclerView = findViewById(R.id.rcClientes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -85,6 +95,12 @@ public class ClientesActivity extends AppCompatActivity implements ClientesAdapt
             Intent intent = new Intent(ClientesActivity.this, RegistrarCliente.class);
             startActivityForResult(intent, 1);
         });
+
+        // Botón de volver
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 
     @Override
@@ -220,17 +236,7 @@ public class ClientesActivity extends AppCompatActivity implements ClientesAdapt
     // Implementar métodos de la interfaz OnClienteClickListener
     @Override
     public void onEditarCliente(Clientes cliente) {
-        // Ir directamente a editar sin confirmación previa
-        Intent intent = new Intent(ClientesActivity.this, RegistrarCliente.class);
-        intent.putExtra("editar_cliente", true);
-        intent.putExtra("cliente_id", cliente.getId());
-        intent.putExtra("cliente_nombre", cliente.getNombreCompleto());
-        intent.putExtra("cliente_direccion", cliente.getDireccion());
-        intent.putExtra("cliente_correo", cliente.getCorreo());
-        intent.putExtra("cliente_telefono", cliente.getTelefono());
-        intent.putExtra("cliente_tipo_doc", cliente.getTipoDocumento());
-        intent.putExtra("cliente_num_doc", cliente.getNumeroDocumento());
-        startActivityForResult(intent, 2); // Código diferente para edición
+        mostrarDialogoConfirmarEdicion(cliente);
     }
 
     @Override

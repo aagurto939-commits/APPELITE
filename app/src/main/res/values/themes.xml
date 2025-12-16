@@ -17,8 +17,44 @@
         <!-- Optimización de memoria -->
         <item name="android:hardwareAccelerated">true</item>
         <item name="android:largeHeap">true</item>
+        <!-- Colores personalizados para evitar colores por defecto de Material 3 -->
+        <item name="colorPrimary">@color/gold_primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSecondary">@color/gold_primary</item>
+        <item name="colorOnSecondary">@color/black</item>
     </style>
 
     <!-- (Opcional) Tema para el Splash; puedes usar el mismo -->
     <style name="Theme.AppElite.Splash" parent="Theme.AppElite" />
+    
+    <!-- Estilos para Bottom Navigation -->
+    <style name="BottomNavActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:width">48dp</item>
+        <item name="android:height">48dp</item>
+        <item name="shapeAppearance">@style/BottomNavItemShape</item>
+    </style>
+    
+    <style name="BottomNavItemShape" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">24dp</item>
+    </style>
+    
+    <!-- Estilos de texto para Bottom Navigation -->
+    <style name="BottomNavTextActive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+    
+    <style name="BottomNavTextInactive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
 </resources>

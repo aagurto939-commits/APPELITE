@@ -3,10 +3,15 @@ package com.example.appelite;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +44,13 @@ public class CotizacionesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_cotizaciones);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         
         initViews();
         initFirebase();
@@ -95,8 +106,10 @@ public class CotizacionesActivity extends AppCompatActivity {
         adapter = new CotizacionesAdapter(cotizacionesFiltradas, new CotizacionesAdapter.OnCotizacionClickListener() {
             @Override
             public void onEditarCotizacion(Cotizacion cotizacion) {
-                // TODO: Implementar edición
-                Toast.makeText(CotizacionesActivity.this, "Editar: " + cotizacion.getCorrelativo(), Toast.LENGTH_SHORT).show();
+                // Navegar a NuevaCotizacionActivity en modo edición
+                Intent intent = new Intent(CotizacionesActivity.this, NuevaCotizacionActivity.class);
+                intent.putExtra("cotizacion_editar", cotizacion);
+                startActivity(intent);
             }
             
             @Override
@@ -160,46 +173,121 @@ public class CotizacionesActivity extends AppCompatActivity {
     }
     
     private void aceptarCotizacion(Cotizacion cotizacion) {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Aceptar Cotización")
-               .setMessage("¿Estás seguro de que quieres aceptar la cotización " + cotizacion.getCorrelativo() + "?\n\nLa cotización se agregará al historial de ventas.")
-               .setPositiveButton("Aceptar", (dialog, which) -> {
-                   // Mostrar diálogo de método de pago
-                   mostrarDialogoMetodoPago(cotizacion);
-               })
-               .setNegativeButton("Cancelar", null)
-               .show();
-    }
-    
-    private void mostrarDialogoMetodoPago(Cotizacion cotizacion) {
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Seleccionar Método de Pago")
-               .setItems(new String[]{"Contado", "Crédito / Deuda"}, (dialog, which) -> {
-                   String metodoPago = (which == 0) ? "Contado" : "Crédito";
-                   // Marcar cotización como aceptada
-                   cotizacion.setEstado("ACEPTADA");
-                   cotizacionesRef.child(cotizacion.getId()).setValue(cotizacion)
-                       .addOnSuccessListener(aVoid -> {
-                           // Crear venta en el historial
-                           crearVentaDesdeCotizacion(cotizacion, metodoPago, which == 1);
-                           Toast.makeText(this, "Cotización aceptada y agregada al historial de ventas", Toast.LENGTH_SHORT).show();
-                           loadCotizaciones(); // Recargar lista
+        // Verificar si la cotización ya fue aceptada (ya existe una venta con este cotizacionId)
+        DatabaseReference ventasRef = FirebaseDatabase.getInstance().getReference("ventas");
+        ventasRef.orderByChild("cotizacionId").equalTo(cotizacion.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists() && snapshot.getChildrenCount() > 0) {
+                    // Ya existe una venta para esta cotización
+                    Toast.makeText(CotizacionesActivity.this, 
+                        "Esta cotización ya fue aceptada anteriormente", 
+                        Toast.LENGTH_LONG).show();
+                    return;
+                }
+                
+                // La cotización no ha sido aceptada, proceder con la aceptación
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CotizacionesActivity.this);
+                builder.setTitle("Aceptar Cotización")
+                       .setMessage("¿Estás seguro de que quieres aceptar la cotización " + cotizacion.getCorrelativo() + "?\n\nSelecciona el método de pago:")
+                       .setPositiveButton("Contado", (dialog, which) -> {
+                           // Marcar cotización como aceptada y crear venta como CONTADO
+                           cotizacion.setEstado("ACEPTADA");
+                           cotizacionesRef.child(cotizacion.getId()).setValue(cotizacion)
+                               .addOnSuccessListener(aVoid -> {
+                                   Log.d("CotizacionesActivity", "✅ Cotización aceptada: " + cotizacion.getCorrelativo() + " (ID: " + cotizacion.getId() + ")");
+                                   crearVentaDesdeCotizacion(cotizacion, "CONTADO", false);
+                                   Toast.makeText(CotizacionesActivity.this, "Cotización aceptada y agregada al historial de ventas", Toast.LENGTH_SHORT).show();
+                                   loadCotizaciones(); // Recargar lista
+                               })
+                               .addOnFailureListener(e -> {
+                                   Log.e("CotizacionesActivity", "❌ Error al actualizar cotización: " + e.getMessage());
+                                   Toast.makeText(CotizacionesActivity.this, "Error al actualizar cotización", Toast.LENGTH_SHORT).show();
+                               });
                        })
-                       .addOnFailureListener(e -> {
-                           Toast.makeText(this, "Error al actualizar cotización", Toast.LENGTH_SHORT).show();
-                       });
-               })
-               .setNegativeButton("Cancelar", null)
-               .show();
+                       .setNeutralButton("Crédito", (dialog, which) -> {
+                           // Marcar cotización como aceptada y crear venta como CRÉDITO
+                           cotizacion.setEstado("ACEPTADA");
+                           cotizacionesRef.child(cotizacion.getId()).setValue(cotizacion)
+                               .addOnSuccessListener(aVoid -> {
+                                   Log.d("CotizacionesActivity", "✅ Cotización aceptada: " + cotizacion.getCorrelativo() + " (ID: " + cotizacion.getId() + ") - CRÉDITO");
+                                   crearVentaDesdeCotizacion(cotizacion, "CRÉDITO", true);
+                                   Toast.makeText(CotizacionesActivity.this, "Cotización aceptada como crédito y agregada al historial", Toast.LENGTH_SHORT).show();
+                                   loadCotizaciones(); // Recargar lista
+                               })
+                               .addOnFailureListener(e -> {
+                                   Log.e("CotizacionesActivity", "❌ Error al actualizar cotización: " + e.getMessage());
+                                   Toast.makeText(CotizacionesActivity.this, "Error al actualizar cotización", Toast.LENGTH_SHORT).show();
+                               });
+                       })
+                       .setNegativeButton("Cancelar", null)
+                       .show();
+            }
+            
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.e("CotizacionesActivity", "ERROR verificando si la cotización ya fue aceptada: " + error.getMessage());
+                // En caso de error, proceder con la aceptación
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(CotizacionesActivity.this);
+                builder.setTitle("Aceptar Cotización")
+                       .setMessage("¿Estás seguro de que quieres aceptar la cotización " + cotizacion.getCorrelativo() + "?\n\nSelecciona el método de pago:")
+                       .setPositiveButton("Contado", (dialog, which) -> {
+                           cotizacion.setEstado("ACEPTADA");
+                           cotizacionesRef.child(cotizacion.getId()).setValue(cotizacion)
+                               .addOnSuccessListener(aVoid -> {
+                                   Log.d("CotizacionesActivity", "✅ Cotización aceptada: " + cotizacion.getCorrelativo() + " (ID: " + cotizacion.getId() + ")");
+                                   crearVentaDesdeCotizacion(cotizacion, "CONTADO", false);
+                                   Toast.makeText(CotizacionesActivity.this, "Cotización aceptada", Toast.LENGTH_SHORT).show();
+                                   loadCotizaciones();
+                               });
+                       })
+                       .setNeutralButton("Crédito", (dialog, which) -> {
+                           cotizacion.setEstado("ACEPTADA");
+                           cotizacionesRef.child(cotizacion.getId()).setValue(cotizacion)
+                               .addOnSuccessListener(aVoid -> {
+                                   Log.d("CotizacionesActivity", "✅ Cotización aceptada: " + cotizacion.getCorrelativo() + " (ID: " + cotizacion.getId() + ") - CRÉDITO");
+                                   crearVentaDesdeCotizacion(cotizacion, "CRÉDITO", true);
+                                   Toast.makeText(CotizacionesActivity.this, "Cotización aceptada como crédito", Toast.LENGTH_SHORT).show();
+                                   loadCotizaciones();
+                               });
+                       })
+                       .setNegativeButton("Cancelar", null)
+                       .show();
+            }
+        });
     }
     
     private void crearVentaDesdeCotizacion(Cotizacion cotizacion, String metodoPago, boolean esCredito) {
-        // Obtener fecha y hora actual
+        // Usar la fecha de emisión de la cotización como fecha de venta (para que aparezca al filtrar por esa fecha)
         java.text.SimpleDateFormat sdfFecha = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
         java.text.SimpleDateFormat sdfHora = new java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault());
-        java.util.Date ahora = new java.util.Date();
-        String fechaVenta = sdfFecha.format(ahora);
-        String horaVenta = sdfHora.format(ahora);
+        
+        String fechaVenta;
+        if (cotizacion.getFechaEmision() != null && !cotizacion.getFechaEmision().isEmpty()) {
+            // Normalizar la fecha de emisión al formato dd/MM/yyyy
+            try {
+                // Intentar parsear la fecha en diferentes formatos posibles
+                String fechaEmision = cotizacion.getFechaEmision();
+                // Si ya está en formato dd/MM/yyyy, usarla directamente
+                if (fechaEmision.matches("\\d{2}/\\d{2}/\\d{4}")) {
+                    fechaVenta = fechaEmision;
+                } else {
+                    // Intentar parsear otros formatos
+                    java.text.SimpleDateFormat sdfInput = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
+                    java.util.Date fecha = sdfInput.parse(fechaEmision);
+                    fechaVenta = sdfFecha.format(fecha);
+                }
+            } catch (Exception e) {
+                Log.e("CotizacionesActivity", "Error parseando fecha de emisión: " + e.getMessage());
+                // Si hay error, usar la fecha actual
+                fechaVenta = sdfFecha.format(new java.util.Date());
+            }
+        } else {
+            // Si no hay fecha de emisión, usar la fecha actual
+            fechaVenta = sdfFecha.format(new java.util.Date());
+        }
+        
+        String horaVenta = sdfHora.format(new java.util.Date());
         
         // Convertir ProductoItem a VentaItem
         List<VentaItem> ventaItems = new ArrayList<>();
@@ -220,7 +308,7 @@ public class CotizacionesActivity extends AppCompatActivity {
         // Crear objeto Venta
         Venta venta = new Venta();
         venta.setClienteId(cotizacion.getClienteId() != null ? cotizacion.getClienteId() : "");
-        venta.setClienteNombre(cotizacion.getClienteNombre());
+        venta.setClienteNombre(cotizacion.getClienteNombre() != null ? cotizacion.getClienteNombre().toUpperCase() : "");
         venta.setClienteDocumento(""); // Se puede obtener del cliente si es necesario
         venta.setFechaVenta(fechaVenta);
         venta.setHoraVenta(horaVenta);
@@ -231,38 +319,192 @@ public class CotizacionesActivity extends AppCompatActivity {
         venta.setMoneda(cotizacion.getMoneda().contains("SOLES") ? "PEN" : "USD");
         venta.setMetodoPago(metodoPago);
         venta.setEstado(esCredito ? "Pendiente" : "Completada");
+        
+        // Configurar estadoPago según el método de pago seleccionado
+        if (esCredito) {
+            venta.setEstadoPago("CREDITO");
+        } else {
+            venta.setEstadoPago("CONTADO");
+        }
+        
         venta.setItems(ventaItems);
         venta.setCotizacionId(cotizacion.getId()); // Referencia a la cotización original
+        venta.setCotizacionCorrelativo(cotizacion.getCorrelativo()); // Guardar el correlativo de la cotización
         
         // Guardar en Firebase en el nodo "ventas" (sin userId para que aparezca en VerVentasActivity)
         DatabaseReference ventasRef = FirebaseDatabase.getInstance().getReference("ventas");
         String ventaId = ventasRef.push().getKey();
         venta.setId(ventaId);
         
+        Log.d("CotizacionesActivity", "🔄 Creando venta desde cotización:");
+        Log.d("CotizacionesActivity", "   - Cotización ID: " + cotizacion.getId());
+        Log.d("CotizacionesActivity", "   - Cotización Correlativo: " + cotizacion.getCorrelativo());
+        Log.d("CotizacionesActivity", "   - Fecha Emisión Cotización: " + cotizacion.getFechaEmision());
+        Log.d("CotizacionesActivity", "   - Fecha Venta (usada): " + fechaVenta);
+        Log.d("CotizacionesActivity", "   - Venta ID: " + ventaId);
+        Log.d("CotizacionesActivity", "   - Método Pago: " + metodoPago);
+        Log.d("CotizacionesActivity", "   - Estado Pago: " + venta.getEstadoPago());
+        Log.d("CotizacionesActivity", "   - Total: " + venta.getTotal());
+        Log.d("CotizacionesActivity", "   - Moneda: " + venta.getMoneda());
+        
         ventasRef.child(ventaId).setValue(venta)
             .addOnSuccessListener(aVoid -> {
-                System.out.println("DEBUG: Venta creada exitosamente desde cotización: " + cotizacion.getCorrelativo());
-                // Si es crédito, navegar a la pantalla de saldos
+                Log.d("CotizacionesActivity", "✅ Venta creada exitosamente:");
+                Log.d("CotizacionesActivity", "   - Venta ID: " + ventaId);
+                Log.d("CotizacionesActivity", "   - Cotización ID: " + cotizacion.getId());
+                Log.d("CotizacionesActivity", "   - Estado Pago: " + venta.getEstadoPago());
+                
+                // Si es crédito, crear deuda
                 if (esCredito) {
-                    Intent intent = new Intent(CotizacionesActivity.this, SaldosActivity.class);
-                    intent.putExtra("ventaId", ventaId);
-                    intent.putExtra("clienteNombre", venta.getClienteNombre());
-                    intent.putExtra("total", venta.getTotal());
-                    startActivity(intent);
+                    crearDeudaDesdeVenta(venta, cotizacion);
                 }
+                
+                // Descontar productos del inventario
+                descontarProductosDelInventario(cotizacion);
             })
             .addOnFailureListener(e -> {
-                System.out.println("ERROR: No se pudo crear la venta: " + e.getMessage());
+                Log.e("CotizacionesActivity", "❌ ERROR: No se pudo crear la venta:");
+                Log.e("CotizacionesActivity", "   - Error: " + e.getMessage());
+                Log.e("CotizacionesActivity", "   - Cotización ID: " + cotizacion.getId());
                 Toast.makeText(this, "Cotización aceptada, pero error al agregar al historial de ventas", Toast.LENGTH_SHORT).show();
             });
     }
     
+    private void crearDeudaDesdeVenta(Venta venta, Cotizacion cotizacion) {
+        // Crear deuda cuando la venta es a crédito
+        DatabaseReference deudasRef = FirebaseDatabase.getInstance().getReference("deudas");
+        String deudaId = deudasRef.push().getKey();
+        
+        // Calcular fecha de vencimiento (30 días desde hoy)
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.add(java.util.Calendar.DAY_OF_MONTH, 30);
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+        String fechaVencimiento = sdf.format(cal.getTime());
+        
+        Deuda deuda = new Deuda();
+        deuda.setId(deudaId);
+        deuda.setClienteId(venta.getClienteId());
+        deuda.setClienteNombre(venta.getClienteNombre());
+        deuda.setCotizacionId(cotizacion.getId());
+        deuda.setVentaId(venta.getId());
+        deuda.setVentaCorrelativo(venta.getCotizacionCorrelativo());
+        deuda.setTotal(venta.getTotal());
+        deuda.setSaldoPendiente(venta.getTotal());
+        deuda.setTotalAbonado(0.0);
+        deuda.setFechaVencimiento(fechaVencimiento);
+        deuda.setFechaCreacion(venta.getFechaVenta());
+        deuda.setMoneda(venta.getMoneda());
+        
+        deudasRef.child(deudaId).setValue(deuda)
+            .addOnSuccessListener(aVoid -> {
+                Log.d("CotizacionesActivity", "✅ Deuda creada exitosamente:");
+                Log.d("CotizacionesActivity", "   - Deuda ID: " + deudaId);
+                Log.d("CotizacionesActivity", "   - Venta ID: " + venta.getId());
+                Log.d("CotizacionesActivity", "   - Monto: " + deuda.getTotal());
+            })
+            .addOnFailureListener(e -> {
+                Log.e("CotizacionesActivity", "❌ ERROR al crear deuda: " + e.getMessage());
+            });
+    }
+    
+    /**
+     * Descuenta las cantidades de productos del inventario cuando se acepta una cotización
+     */
+    private void descontarProductosDelInventario(Cotizacion cotizacion) {
+        if (cotizacion.getProductos() == null || cotizacion.getProductos().isEmpty()) {
+            System.out.println("DEBUG: No hay productos para descontar en la cotización " + cotizacion.getCorrelativo());
+            return;
+        }
+        
+        DatabaseReference productosRef = FirebaseDatabase.getInstance().getReference("productos");
+        final int[] productosProcesados = {0};
+        final int[] productosConError = {0};
+        
+        System.out.println("DEBUG: Descontando productos del inventario para cotización " + cotizacion.getCorrelativo());
+        
+        for (ProductoItem productoItem : cotizacion.getProductos()) {
+            final String productoId = productoItem.getProductoId();
+            final int cantidadVendida = productoItem.getCantidad();
+            final String nombreProducto = productoItem.getNombre();
+            
+            if (productoId == null || productoId.isEmpty()) {
+                System.out.println("WARNING: ProductoItem sin ID, saltando: " + nombreProducto);
+                productosConError[0]++;
+                continue;
+            }
+            
+            // Obtener el producto actual desde Firebase
+            productosRef.child(productoId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        Producto producto = snapshot.getValue(Producto.class);
+                        if (producto != null) {
+                            final int stockActual = producto.getStock();
+                            final String nombreProductoFinal = producto.getNombre();
+                            int nuevoStock = stockActual - cantidadVendida;
+                            
+                            // Asegurar que el stock no sea negativo
+                            if (nuevoStock < 0) {
+                                System.out.println("WARNING: Stock insuficiente para producto " + nombreProductoFinal + 
+                                                 ". Stock actual: " + stockActual + ", Cantidad vendida: " + cantidadVendida);
+                                nuevoStock = 0; // No permitir stock negativo
+                            }
+                            
+                            final int nuevoStockFinal = nuevoStock;
+                            
+                            // Actualizar el stock en Firebase
+                            final DatabaseReference productoRef = productosRef.child(productoId);
+                            productoRef.child("stock").setValue(nuevoStockFinal)
+                                .addOnSuccessListener(aVoid -> {
+                                    System.out.println("DEBUG: ✓ Stock actualizado para " + nombreProductoFinal + 
+                                                     " - Stock anterior: " + stockActual + ", Nuevo stock: " + nuevoStockFinal);
+                                })
+                                .addOnFailureListener(e -> {
+                                    System.out.println("ERROR: No se pudo actualizar stock para " + nombreProductoFinal + ": " + e.getMessage());
+                                });
+                        } else {
+                            System.out.println("ERROR: Producto null al obtener desde Firebase: " + productoId);
+                        }
+                    } else {
+                        System.out.println("WARNING: Producto no encontrado en Firebase: " + productoId + " (" + nombreProducto + ")");
+                    }
+                    productosProcesados[0]++;
+                }
+                
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    System.out.println("ERROR: Error al obtener producto desde Firebase: " + error.getMessage());
+                    productosConError[0]++;
+                }
+            });
+        }
+        
+        System.out.println("DEBUG: Iniciado proceso de descuento para " + cotizacion.getProductos().size() + " productos del inventario");
+    }
+    
     private void mostrarOpcionesSwipe(Cotizacion cotizacion, int position) {
+        // Verificar si la cotización está vencida
+        String estadoNormalizado = cotizacion.getEstado() != null ? cotizacion.getEstado().toUpperCase() : "";
+        boolean esVencida = "VENCIDA".equals(estadoNormalizado) || cotizacion.estaVencida();
+        boolean esAceptada = "ACEPTADA".equals(estadoNormalizado);
+        
+        String mensaje = "¿Qué acción deseas realizar?";
+        if (esVencida && !esAceptada) {
+            mensaje = "Esta cotización está vencida. ¿Deseas aceptarla de todas formas?";
+        }
+        
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Acción para " + cotizacion.getCorrelativo())
-               .setMessage("¿Qué acción deseas realizar?")
+               .setMessage(mensaje)
                .setPositiveButton("✅ Aceptar", (dialog, which) -> {
-                   aceptarCotizacion(cotizacion);
+                   // Permitir aceptar incluso si está vencida (pero no si ya está aceptada)
+                   if (!esAceptada) {
+                       aceptarCotizacion(cotizacion);
+                   } else {
+                       Toast.makeText(this, "Esta cotización ya fue aceptada", Toast.LENGTH_SHORT).show();
+                       loadCotizaciones();
+                   }
                })
                .setNegativeButton("🗑️ Eliminar", (dialog, which) -> {
                    mostrarConfirmacionEliminar(cotizacion);
@@ -329,6 +571,13 @@ public class CotizacionesActivity extends AppCompatActivity {
     }
     
     private void compartirPorWhatsApp(String rutaArchivo, Cotizacion cotizacion) {
+        // Crear mensaje con correlativo y nombre completo del cliente
+        String nombreCliente = cotizacion.getClienteNombre() != null ? cotizacion.getClienteNombre().toUpperCase() : "Sin nombre";
+        String correlativo = cotizacion.getCorrelativo() != null ? cotizacion.getCorrelativo() : "N/A";
+        String mensaje = "Cotización " + correlativo + "\n" +
+                        "Cliente: " + nombreCliente + "\n" +
+                        "Total: " + cotizacion.getTotal() + " " + cotizacion.getMoneda();
+        
         try {
             java.io.File archivo = new java.io.File(rutaArchivo);
             Uri uri = FileProvider.getUriForFile(this, 
@@ -337,10 +586,8 @@ public class CotizacionesActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("application/pdf");
             intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.putExtra(Intent.EXTRA_SUBJECT, "Cotización " + cotizacion.getCorrelativo());
-            intent.putExtra(Intent.EXTRA_TEXT, "Hola, te envío la cotización " + cotizacion.getCorrelativo() + 
-                         " por un total de " + cotizacion.getTotal() + " " + cotizacion.getMoneda() + 
-                         ". ¡Gracias por tu preferencia!");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Cotización " + correlativo + " - " + nombreCliente);
+            intent.putExtra(Intent.EXTRA_TEXT, mensaje + "\n\n¡Gracias por tu preferencia!");
             
             // Intentar abrir específicamente WhatsApp
             intent.setPackage("com.whatsapp");
@@ -445,10 +692,21 @@ public class CotizacionesActivity extends AppCompatActivity {
                     if (cotizacion != null) {
                         cotizacion.setId(snapshot.getKey());
                         
+                        // Normalizar estado a valores estándar
+                        String estadoActual = cotizacion.getEstado();
+                        String estadoNormalizado = normalizarEstado(cotizacion);
+                        
+                        // Si el estado cambió al normalizar, actualizar en Firebase
+                        if (estadoActual != null && !estadoNormalizado.equals(estadoActual.toUpperCase().trim())) {
+                            cotizacion.setEstado(estadoNormalizado);
+                            cotizacionesRef.child(cotizacion.getId()).child("estado").setValue(estadoNormalizado);
+                            System.out.println("DEBUG: Cotización " + cotizacion.getCorrelativo() + 
+                                             " estado normalizado: " + estadoActual + " → " + estadoNormalizado);
+                        }
+                        
                         // Actualizar estado automáticamente si está vencida
                         if (cotizacion.estaVencida() && !"ACEPTADA".equals(cotizacion.getEstado()) && !"VENCIDA".equals(cotizacion.getEstado())) {
                             cotizacion.setEstado("VENCIDA");
-                            // Actualizar en Firebase
                             cotizacionesRef.child(cotizacion.getId()).child("estado").setValue("VENCIDA");
                             System.out.println("DEBUG: Cotización " + cotizacion.getCorrelativo() + " marcada como VENCIDA automáticamente");
                         }
@@ -496,7 +754,7 @@ public class CotizacionesActivity extends AppCompatActivity {
         Cotizacion cot1 = new Cotizacion();
         cot1.setId("1");
         cot1.setClienteNombre("Andrea Agurto");
-        cot1.setEstado("PENDIENTE");
+        cot1.setEstado("PENDIENTE"); // Normalizado a mayúsculas
         cot1.setCorrelativo("C001-00000001");
         cot1.setFechaEmision("15/01/2025");
         cot1.setTotal(215.50);
@@ -571,7 +829,7 @@ public class CotizacionesActivity extends AppCompatActivity {
         Cotizacion cotizacionPrueba = new Cotizacion();
         cotizacionPrueba.setCorrelativo("C001-00000999");
         cotizacionPrueba.setClienteNombre("CLIENTE PRUEBA FIREBASE");
-        cotizacionPrueba.setEstado("PENDIENTE");
+        cotizacionPrueba.setEstado("PENDIENTE"); // Normalizado a mayúsculas
         cotizacionPrueba.setFechaEmision("15/01/2025");
         cotizacionPrueba.setTotal(999.99);
         cotizacionPrueba.setMoneda("SOLES (S/)");
@@ -592,7 +850,38 @@ public class CotizacionesActivity extends AppCompatActivity {
         });
     }
     
+    /**
+     * Normaliza el estado de una cotización a valores estándar: PENDIENTE, ACEPTADA, VENCIDA
+     */
+    private String normalizarEstado(Cotizacion c) {
+        String estado = c.getEstado();
+        if (estado == null) {
+            return "PENDIENTE";
+        }
+        
+        // Normalizar a mayúsculas
+        estado = estado.toUpperCase().trim();
+        
+        // Si está vencida y no es ACEPTADA, debe ser VENCIDA
+        if (c.estaVencida() && !"ACEPTADA".equals(estado)) {
+            return "VENCIDA";
+        }
+        
+        // Mapear variaciones comunes a valores estándar
+        if (estado.startsWith("PEND")) {
+            return "PENDIENTE";
+        } else if (estado.startsWith("ACEPT")) {
+            return "ACEPTADA";
+        } else if (estado.startsWith("VENC")) {
+            return "VENCIDA";
+        }
+        
+        // Si no coincide con ningún patrón conocido, devolver como está (en mayúsculas)
+        return estado;
+    }
+    
     private void aplicarFiltro(String filtro) {
+        System.out.println("DEBUG: ========================================");
         System.out.println("DEBUG: Aplicando filtro: " + filtro);
         filtroActual = filtro;
         cotizacionesFiltradas.clear();
@@ -600,30 +889,70 @@ public class CotizacionesActivity extends AppCompatActivity {
         int contadorOriginal = cotizaciones.size();
         int contadorFiltrado = 0;
         
+        // Contadores de diagnóstico por estado
+        int contadorPendiente = 0;
+        int contadorAceptada = 0;
+        int contadorVencida = 0;
+        int contadorOtros = 0;
+        
+        // Primero, contar estados actuales para diagnóstico
+        for (Cotizacion c : cotizaciones) {
+            String estadoNormalizado = normalizarEstado(c);
+            switch (estadoNormalizado) {
+                case "PENDIENTE":
+                    contadorPendiente++;
+                    break;
+                case "ACEPTADA":
+                    contadorAceptada++;
+                    break;
+                case "VENCIDA":
+                    contadorVencida++;
+                    break;
+                default:
+                    contadorOtros++;
+                    System.out.println("DEBUG: Estado no reconocido: " + estadoNormalizado + " (original: " + c.getEstado() + ")");
+                    break;
+            }
+        }
+        
+        System.out.println("DEBUG: Diagnóstico de estados:");
+        System.out.println("DEBUG:   PENDIENTE: " + contadorPendiente);
+        System.out.println("DEBUG:   ACEPTADA: " + contadorAceptada);
+        System.out.println("DEBUG:   VENCIDA: " + contadorVencida);
+        System.out.println("DEBUG:   OTROS: " + contadorOtros);
+        
+        // Aplicar filtro con igualdad exacta
         switch (filtro) {
             case "Pendientes":
                 for (Cotizacion c : cotizaciones) {
-                    // Mostrar solo pendientes que NO estén vencidas
-                    if ("Pendiente".equalsIgnoreCase(c.getEstado()) && !c.estaVencida()) {
+                    String estadoNormalizado = normalizarEstado(c);
+                    // Solo PENDIENTE que NO esté vencida
+                    if ("PENDIENTE".equals(estadoNormalizado)) {
                         cotizacionesFiltradas.add(c);
                         contadorFiltrado++;
+                        System.out.println("DEBUG: ✓ Agregada PENDIENTE: " + c.getCorrelativo() + " (estado original: " + c.getEstado() + ")");
                     }
                 }
                 break;
             case "Aceptadas":
                 for (Cotizacion c : cotizaciones) {
-                    if ("Aceptada".equalsIgnoreCase(c.getEstado())) {
+                    String estadoNormalizado = normalizarEstado(c);
+                    // Solo ACEPTADA exactamente
+                    if ("ACEPTADA".equals(estadoNormalizado)) {
                         cotizacionesFiltradas.add(c);
                         contadorFiltrado++;
+                        System.out.println("DEBUG: ✓ Agregada ACEPTADA: " + c.getCorrelativo() + " (estado original: " + c.getEstado() + ")");
                     }
                 }
                 break;
             case "Vencidas":
                 for (Cotizacion c : cotizaciones) {
-                    // Mostrar todas las vencidas (independientemente de su estado anterior)
-                    if ("Vencida".equalsIgnoreCase(c.getEstado()) || c.estaVencida()) {
+                    String estadoNormalizado = normalizarEstado(c);
+                    // Solo VENCIDA exactamente
+                    if ("VENCIDA".equals(estadoNormalizado)) {
                         cotizacionesFiltradas.add(c);
                         contadorFiltrado++;
+                        System.out.println("DEBUG: ✓ Agregada VENCIDA: " + c.getCorrelativo() + " (estado original: " + c.getEstado() + ")");
                     }
                 }
                 break;
@@ -633,12 +962,39 @@ public class CotizacionesActivity extends AppCompatActivity {
                 break;
         }
         
-        System.out.println("DEBUG: Filtro aplicado - Original: " + contadorOriginal + ", Filtrado: " + contadorFiltrado);
-        System.out.println("DEBUG: cotizacionesFiltradas.size() = " + cotizacionesFiltradas.size());
+        System.out.println("DEBUG: Resultado del filtro:");
+        System.out.println("DEBUG:   Total original: " + contadorOriginal);
+        System.out.println("DEBUG:   Total filtrado: " + contadorFiltrado);
+        System.out.println("DEBUG:   Tamaño lista filtrada: " + cotizacionesFiltradas.size());
+        System.out.println("DEBUG: ========================================");
+        
+        // Verificar que no haya elementos de otros estados en la lista filtrada
+        for (Cotizacion c : cotizacionesFiltradas) {
+            String estadoNormalizado = normalizarEstado(c);
+            boolean estadoCorrecto = false;
+            switch (filtro) {
+                case "Pendientes":
+                    estadoCorrecto = "PENDIENTE".equals(estadoNormalizado);
+                    break;
+                case "Aceptadas":
+                    estadoCorrecto = "ACEPTADA".equals(estadoNormalizado);
+                    break;
+                case "Vencidas":
+                    estadoCorrecto = "VENCIDA".equals(estadoNormalizado);
+                    break;
+                default:
+                    estadoCorrecto = true;
+                    break;
+            }
+            if (!estadoCorrecto) {
+                System.out.println("ERROR: Estado incorrecto en lista filtrada - " + c.getCorrelativo() + 
+                                 " tiene estado " + estadoNormalizado + " pero el filtro es " + filtro);
+            }
+        }
         
         if (adapter != null) {
-        adapter.notifyDataSetChanged();
-            System.out.println("DEBUG: Adapter notificado de cambios - ItemCount: " + adapter.getItemCount());
+            adapter.notifyDataSetChanged();
+            System.out.println("DEBUG: Adapter notificado - ItemCount: " + adapter.getItemCount());
         } else {
             System.out.println("ERROR: Adapter es null en aplicarFiltro!");
         }

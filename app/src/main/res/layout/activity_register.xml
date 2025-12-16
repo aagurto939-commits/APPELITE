@@ -66,9 +66,11 @@
         android:layout_marginTop="-24dp">
 
         <ScrollView
+            android:id="@+id/scrollViewRegistro"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:clipToPadding="false">
 
             <LinearLayout
                 android:layout_width="match_parent"

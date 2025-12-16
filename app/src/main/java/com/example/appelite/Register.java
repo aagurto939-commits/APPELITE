@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,17 +31,35 @@ public class Register extends AppCompatActivity {
     private EditText txtApellidoNombre, txtCorreo, txtTelefono, txtContraseña;
     private Button btnRegistar;
     private TextView tvSignIn;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+        scrollView = findViewById(R.id.scrollViewRegistro);
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
+        
+        if (scrollView != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, insets) -> {
+                Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+                int bottomInset = imeInsets.bottom;
+                
+                scrollView.setPadding(
+                    scrollView.getPaddingLeft(),
+                    scrollView.getPaddingTop(),
+                    scrollView.getPaddingRight(),
+                    bottomInset);
+                return insets;
+            });
+            ViewCompat.requestApplyInsets(scrollView);
+        }
 
         // Inicializar vistas
         initViews();

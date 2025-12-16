@@ -6,6 +6,7 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import com.google.android.material.card.MaterialCardView;
 
 public class Pantalla_inicio extends AppCompatActivity {
 
@@ -82,6 +83,28 @@ public class Pantalla_inicio extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
+                }
+
+                // Deudas
+                MaterialCardView cardDeudas = findViewById(R.id.cardDeudas);
+                if (cardDeudas != null) {
+                    cardDeudas.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                Intent intent = new Intent(Pantalla_inicio.this, SaldosActivity.class);
+                                startActivity(intent);
+                            } catch (Exception e) {
+                                android.util.Log.e("Pantalla_inicio", "Error al abrir SaldosActivity: " + e.getMessage());
+                                e.printStackTrace();
+                                android.widget.Toast.makeText(Pantalla_inicio.this, 
+                                    "Error al abrir Deudas: " + e.getMessage(), 
+                                    android.widget.Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } else {
+                    android.util.Log.e("Pantalla_inicio", "cardDeudas es null");
                 }
 
                 // Pagos (usando cardConfiguracion como alternativa)

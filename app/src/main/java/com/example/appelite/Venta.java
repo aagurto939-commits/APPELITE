@@ -1,5 +1,6 @@
 package com.example.appelite;
 
+import com.google.firebase.database.Exclude;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -17,12 +18,23 @@ public class Venta {
     private String metodoPago;
     private String moneda;
     private String estado;
+    private String estadoPago; // PENDIENTE, CONTADO, CREDITO
     private List<Producto> productos;
     private List<VentaItem> items; // Para compatibilidad con clases existentes
     private String cotizacionId; // Referencia a la cotización original
+    private String cotizacionCorrelativo; // Correlativo de la cotización original
+    
+    // Campos para conversión de moneda (guardados desde la cotización)
+    private String monedaOriginal; // Moneda original de la cotización
+    private double totalOriginal; // Total original de la cotización
+    private double tipoCambioUsado; // Tipo de cambio usado en la cotización
+    private double totalEnSoles; // Total convertido a soles
+    private double totalEnDolares; // Total convertido a dólares
 
     // Constructor vacío para Firebase
-    public Venta() {}
+    public Venta() {
+        this.estadoPago = "PENDIENTE"; // Por defecto pendiente
+    }
 
     // Constructor completo
     public Venta(String id, String clienteId, String clienteNombre, String clienteDocumento, 
@@ -81,7 +93,7 @@ public class Venta {
     public void setMetodoPago(String metodoPago) { this.metodoPago = metodoPago; }
 
     public String getMoneda() { return moneda; }
-    public void setMoneda(String moneda) { this.moneda = moneda; }
+    public void setMoneda(String moneda) { this.moneda = moneda != null ? moneda : "PEN"; }
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
@@ -99,27 +111,70 @@ public class Venta {
 
     public String getCotizacionId() { return cotizacionId; }
     public void setCotizacionId(String cotizacionId) { this.cotizacionId = cotizacionId; }
+    
+    public String getCotizacionCorrelativo() { return cotizacionCorrelativo; }
+    public void setCotizacionCorrelativo(String cotizacionCorrelativo) { this.cotizacionCorrelativo = cotizacionCorrelativo; }
+    
+    public String getEstadoPago() { 
+        return estadoPago != null ? estadoPago : "PENDIENTE"; 
+    }
+    public void setEstadoPago(String estadoPago) { 
+        this.estadoPago = estadoPago != null ? estadoPago.toUpperCase() : "PENDIENTE"; 
+    }
+    
+    // Métodos utilitarios para estadoPago
+    public boolean esPendiente() {
+        return "PENDIENTE".equals(getEstadoPago());
+    }
+    
+    public boolean esContado() {
+        return "CONTADO".equals(getEstadoPago());
+    }
+    
+    public boolean esCredito() {
+        return "CREDITO".equals(getEstadoPago()) || "CRÉDITO".equals(getEstadoPago());
+    }
+    
+    public boolean estaProcesada() {
+        return !esPendiente();
+    }
 
     // Método para obtener la descripción de productos
+    @Exclude
     public String getDescripcionProductos() {
-        if (productos == null || productos.isEmpty()) {
-            return "Sin productos";
+        // Primero intentar con items (VentaItem)
+        if (items != null && !items.isEmpty()) {
+            StringBuilder descripcion = new StringBuilder();
+            int maxItems = Math.min(items.size(), 2);
+            for (int i = 0; i < maxItems; i++) {
+                if (i > 0) descripcion.append(" + ");
+                descripcion.append(items.get(i).getNombre());
+            }
+            if (items.size() > 2) {
+                descripcion.append(" + ").append(items.size() - 2).append(" más");
+            }
+            return descripcion.toString();
         }
         
-        StringBuilder descripcion = new StringBuilder();
-        for (int i = 0; i < productos.size() && i < 2; i++) {
-            if (i > 0) descripcion.append(" + ");
-            descripcion.append(productos.get(i).getNombre());
+        // Si no hay items, intentar con productos
+        if (productos != null && !productos.isEmpty()) {
+            StringBuilder descripcion = new StringBuilder();
+            int maxItems = Math.min(productos.size(), 2);
+            for (int i = 0; i < maxItems; i++) {
+                if (i > 0) descripcion.append(" + ");
+                descripcion.append(productos.get(i).getNombre());
+            }
+            if (productos.size() > 2) {
+                descripcion.append(" + ").append(productos.size() - 2).append(" más");
+            }
+            return descripcion.toString();
         }
         
-        if (productos.size() > 2) {
-            descripcion.append(" + ").append(productos.size() - 2).append(" más");
-        }
-        
-        return descripcion.toString();
+        return "Sin productos";
     }
 
     // Método para obtener la fecha formateada
+    @Exclude
     public String getFechaFormateada() {
         if (fechaVenta == null) return "";
         // Formato: DD-MMM, HH:MM
@@ -127,11 +182,113 @@ public class Venta {
     }
 
     // Método para obtener el monto formateado
+    @Exclude
     public String getMontoFormateado() {
-        String simbolo = "S/ ";
-        if ("USD".equals(moneda)) {
-            simbolo = "$ ";
+        return getSimboloMoneda() + String.format(java.util.Locale.getDefault(), "%.2f", total);
+    }
+
+    public String getSimboloMoneda() {
+        return "USD".equalsIgnoreCase(getMonedaNormalizada()) ? "US$ " : "S/ ";
+    }
+
+    public String getMonedaNormalizada() {
+        if (moneda == null) return "PEN";
+        String upper = moneda.trim().toUpperCase(java.util.Locale.getDefault());
+        if (upper.contains("USD") || upper.contains("DOLAR") || upper.contains("DÓLAR")) {
+            return "USD";
         }
-        return simbolo + String.format("%.2f", total);
+        if (upper.contains("PEN") || upper.contains("SOL")) {
+            return "PEN";
+        }
+        return upper;
+    }
+    
+    // Getters y Setters para campos de conversión
+    public String getMonedaOriginal() {
+        return monedaOriginal != null ? monedaOriginal : getMonedaNormalizada();
+    }
+    
+    public void setMonedaOriginal(String monedaOriginal) {
+        this.monedaOriginal = monedaOriginal;
+    }
+    
+    public double getTotalOriginal() {
+        return totalOriginal > 0 ? totalOriginal : total;
+    }
+    
+    public void setTotalOriginal(double totalOriginal) {
+        this.totalOriginal = totalOriginal;
+    }
+    
+    public double getTipoCambioUsado() {
+        return tipoCambioUsado;
+    }
+    
+    public void setTipoCambioUsado(double tipoCambioUsado) {
+        this.tipoCambioUsado = tipoCambioUsado;
+    }
+    
+    public double getTotalEnSoles() {
+        return totalEnSoles;
+    }
+    
+    public void setTotalEnSoles(double totalEnSoles) {
+        this.totalEnSoles = totalEnSoles;
+    }
+    
+    public double getTotalEnDolares() {
+        return totalEnDolares;
+    }
+    
+    public void setTotalEnDolares(double totalEnDolares) {
+        this.totalEnDolares = totalEnDolares;
+    }
+    
+    // Método para obtener el total en soles (usar el guardado o calcular)
+    public double obtenerTotalEnSoles() {
+        // Si ya está guardado y es mayor que 0, usarlo
+        if (totalEnSoles > 0) {
+            return totalEnSoles;
+        }
+        
+        // Si no está guardado, calcular basándose en la moneda original y el tipo de cambio
+        String monedaOrig = getMonedaOriginal();
+        double totalOrig = getTotalOriginal();
+        double tipoCambio = getTipoCambioUsado();
+        
+        // Si la moneda original es USD y hay tipo de cambio, multiplicar
+        if ("USD".equals(monedaOrig) && tipoCambio > 0) {
+            double calculado = totalOrig * tipoCambio;
+            // Guardar el valor calculado para futuras consultas
+            if (totalEnSoles <= 0) {
+                totalEnSoles = calculado;
+            }
+            return calculado;
+        } 
+        // Si la moneda original es PEN, el total ya está en soles
+        else if ("PEN".equals(monedaOrig)) {
+            if (totalEnSoles <= 0) {
+                totalEnSoles = totalOrig > 0 ? totalOrig : total;
+            }
+            return totalOrig > 0 ? totalOrig : total;
+        }
+        
+        // Fallback: usar el total actual (asumiendo que está en soles)
+        return total;
+    }
+    
+    // Método para obtener el total en dólares (usar el guardado o calcular)
+    public double obtenerTotalEnDolares() {
+        if (totalEnDolares > 0) {
+            return totalEnDolares;
+        }
+        // Si no está guardado, calcular basándose en la moneda original
+        String monedaOrig = getMonedaOriginal();
+        if ("PEN".equals(monedaOrig) && tipoCambioUsado > 0) {
+            return totalOriginal / tipoCambioUsado;
+        } else if ("USD".equals(monedaOrig)) {
+            return totalOriginal;
+        }
+        return total;
     }
 }

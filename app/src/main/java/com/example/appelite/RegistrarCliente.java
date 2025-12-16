@@ -3,14 +3,20 @@ package com.example.appelite;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,13 +39,33 @@ public class RegistrarCliente extends AppCompatActivity {
     private String tipoDocumentoSeleccionado = "DNI";
     private boolean esEdicion = false;
     private String clienteId;
+    private android.widget.ScrollView scrollView;
+    private int basePaddingBottomPx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registrar_cliente);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        // Inicializar vistas
+        // Inicializar vistas - Buscar ScrollView directamente
+        scrollView = findViewById(R.id.scrollViewFormulario);
+        if (scrollView != null) {
+            basePaddingBottomPx = scrollView.getPaddingBottom();
+            ViewCompat.setOnApplyWindowInsetsListener(scrollView, (v, insets) -> {
+                int bottom = Math.max(insets.getInsets(WindowInsetsCompat.Type.ime()).bottom,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom);
+                v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(),
+                        basePaddingBottomPx + bottom);
+                return insets;
+            });
+        }
+        
         etNombre = findViewById(R.id.etNombre);
         etCorreo = findViewById(R.id.etCorreo);
         etDireccion = findViewById(R.id.etDireccion);
@@ -50,6 +76,9 @@ public class RegistrarCliente extends AppCompatActivity {
         MaterialButton btnRegistrar = findViewById(R.id.btnRegistrarCliente);
         MaterialButton btnCancelar = findViewById(R.id.btnCancelarCliente);
         MaterialButton btnBuscarDocumento = findViewById(R.id.btnBuscarDocumento);
+        
+        // Configurar listeners para desplazar automáticamente cuando se enfoque un campo
+        setupAutoScrollOnFocus();
 
         // Verificar si es edición o creación
         verificarModoEdicion();
@@ -63,6 +92,57 @@ public class RegistrarCliente extends AppCompatActivity {
             finish();
         });
         btnBuscarDocumento.setOnClickListener(v -> buscarDocumento());
+
+        // Botón de volver
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> {
+                setResult(RESULT_CANCELED);
+                finish();
+            });
+        }
+    }
+    
+    private void setupAutoScrollOnFocus() {
+        if (scrollView == null) return;
+        
+        View[] campos = {
+            etNumeroDocumento,
+            etNombre,
+            etTelefono,
+            etCorreo,
+            etDireccion
+        };
+        
+        for (View campo : campos) {
+            if (campo == null) continue;
+            campo.setOnFocusChangeListener((v, hasFocus) -> {
+                if (hasFocus) {
+                    scrollView.post(() -> {
+                        // Obtener la posición del campo relativa al ScrollView
+                        int[] location = new int[2];
+                        v.getLocationInWindow(location);
+                        
+                        int[] scrollLocation = new int[2];
+                        scrollView.getLocationInWindow(scrollLocation);
+                        
+                        int fieldTop = location[1];
+                        int scrollTop = scrollLocation[1];
+                        int relativeTop = fieldTop - scrollTop + scrollView.getScrollY();
+                        
+                        // Calcular el desplazamiento necesario (dejar espacio arriba)
+                        int target = relativeTop - dpToPx(100);
+                        if (target < 0) target = 0;
+                        
+                        scrollView.smoothScrollTo(0, target);
+                    });
+                }
+            });
+        }
+    }
+    
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
     private void setupSpinnerTipoDocumento() {
@@ -98,7 +178,10 @@ public class RegistrarCliente extends AppCompatActivity {
         } else {
             etNumeroDocumento.setHint("Ingrese DNI (8 dígitos)");
         }
-        etNumeroDocumento.setText(""); // Limpiar campo al cambiar tipo
+        // Solo limpiar el campo si NO estamos en modo edición
+        if (!esEdicion) {
+            etNumeroDocumento.setText(""); // Limpiar campo al cambiar tipo
+        }
     }
 
     private void verificarModoEdicion() {
@@ -113,7 +196,7 @@ public class RegistrarCliente extends AppCompatActivity {
             }
             
             MaterialButton btnRegistrar = findViewById(R.id.btnRegistrarCliente);
-            btnRegistrar.setText("Actualizar Cliente");
+            btnRegistrar.setText("Actualizar");
             
             // Cargar datos del cliente
             cargarDatosCliente();
@@ -124,18 +207,26 @@ public class RegistrarCliente extends AppCompatActivity {
         Intent intent = getIntent();
         clienteId = intent.getStringExtra("cliente_id");
         
-        etNombre.setText(intent.getStringExtra("cliente_nombre"));
-        etDireccion.setText(intent.getStringExtra("cliente_direccion"));
-        etCorreo.setText(intent.getStringExtra("cliente_correo"));
-        etTelefono.setText(intent.getStringExtra("cliente_telefono"));
-        etNumeroDocumento.setText(intent.getStringExtra("cliente_num_doc"));
-        
+        // Cargar tipo de documento PRIMERO antes de cargar el número
         String tipoDoc = intent.getStringExtra("cliente_tipo_doc");
         if (tipoDoc != null) {
             tipoDocumentoSeleccionado = tipoDoc;
-            // Seleccionar en spinner después de configurar
+            // Seleccionar en spinner ANTES de cargar el número de documento
             seleccionarTipoDocumento(tipoDoc);
         }
+        
+        // Ahora cargar los datos del cliente
+        String nombre = intent.getStringExtra("cliente_nombre");
+        String direccion = intent.getStringExtra("cliente_direccion");
+        String correo = intent.getStringExtra("cliente_correo");
+        String telefono = intent.getStringExtra("cliente_telefono");
+        String numDoc = intent.getStringExtra("cliente_num_doc");
+        
+        if (nombre != null) etNombre.setText(nombre);
+        if (direccion != null) etDireccion.setText(direccion);
+        if (correo != null) etCorreo.setText(correo);
+        if (telefono != null) etTelefono.setText(telefono);
+        if (numDoc != null) etNumeroDocumento.setText(numDoc);
     }
 
     private void seleccionarTipoDocumento(String tipo) {

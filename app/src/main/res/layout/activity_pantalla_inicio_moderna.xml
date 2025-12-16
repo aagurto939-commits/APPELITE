@@ -8,6 +8,7 @@
 
     <!-- CONTENEDOR PRINCIPAL -->
     <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -76,6 +77,7 @@
 
         <!-- ===== CONTENIDO SCROLL ===== -->
         <ScrollView
+            android:id="@+id/scrollViewContent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -111,9 +113,10 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvTotalClientes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="150"
+                                android:text="0"
                                 android:textColor="@color/success"
                                 android:textSize="24sp"
                                 android:textStyle="bold" />
@@ -146,9 +149,10 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvTotalProductos"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="45"
+                                android:text="0"
                                 android:textColor="@color/gold_primary"
                                 android:textSize="24sp"
                                 android:textStyle="bold" />
@@ -190,9 +194,10 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvTotalCotizaciones"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="28"
+                                android:text="0"
                                 android:textColor="@color/error"
                                 android:textSize="24sp"
                                 android:textStyle="bold" />
@@ -225,9 +230,10 @@
                             android:gravity="center">
 
                             <TextView
+                                android:id="@+id/tvTotalVentasHoy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="S/ 25,430"
+                                android:text="S/ 0.00"
                                 android:textColor="@color/gold_primary"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -818,20 +824,41 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gold_primary"
-            android:elevation="12dp"
-            app:itemIconTint="@color/black"
-            app:itemTextColor="@color/black"
+            android:background="@drawable/bottom_nav_background"
+            android:elevation="16dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:minHeight="68dp"
+            app:itemIconTint="@color/bottom_nav_icon_selector"
+            app:itemTextColor="@color/bottom_nav_text_selector"
+            app:itemRippleColor="@android:color/transparent"
+            app:itemBackground="@android:color/transparent"
+            app:itemIconSize="24dp"
+            app:itemHorizontalTranslationEnabled="false"
+            app:itemTextAppearanceActive="@style/BottomNavTextActive"
+            app:itemTextAppearanceInactive="@style/BottomNavTextInactive"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_navigation_menu"/>
     </LinearLayout>
 
     <!-- DRAWER LATERAL -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
+        android:layout_width="320dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
+        android:fitsSystemWindows="false"
+        android:background="@color/white"
+        android:elevation="16dp"
+        android:paddingTop="0dp"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer"/>
+        app:menu="@menu/activity_main_drawer"
+        app:itemIconTint="@color/nav_item_icon_selector"
+        app:itemTextColor="@color/nav_item_color_selector"
+        app:itemRippleColor="@color/gold_light"
+        app:itemMaxLines="1"
+        app:itemHorizontalPadding="16dp"
+        app:itemIconPadding="8dp"
+        app:itemIconSize="24dp"
+        app:itemVerticalPadding="8dp" />
 </androidx.drawerlayout.widget.DrawerLayout>

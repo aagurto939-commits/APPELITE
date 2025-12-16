@@ -28,7 +28,18 @@
     <color name="success">#28A745</color>
     <color name="warning">#FFC107</color>
     <color name="error">#DC3545</color>
+    <color name="badge_red">#E53935</color>
+    <color name="blue_primary">#2196F3</color>
+    <color name="blue_dark">#1E3A5F</color>
+    <color name="blue_dark_light">#2C5282</color>
+    <color name="red_error">#DC3545</color>
     
     <!-- Fondos -->
     <color name="background_light">#F8F9FA</color>
+    
+    <!-- Colores para método de pago -->
+    <color name="credito_bg">#E3F2FD</color>
+    <color name="credito_text">#1565C0</color>
+    <color name="contado_bg">#E8F5E9</color>
+    <color name="contado_text">#2E7D32</color>
 </resources>

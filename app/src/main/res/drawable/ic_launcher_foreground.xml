@@ -1,30 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                android:endX="85.84757"
-                android:endY="92.4963"
-                android:startX="42.9492"
-                android:startY="49.59793"
-                android:type="linear">
-                <item
-                    android:color="#44000000"
-                    android:offset="0.0" />
-                <item
-                    android:color="#00000000"
-                    android:offset="1.0" />
-            </gradient>
-        </aapt:attr>
-    </path>
+    
+    <!-- Anillo dorado exterior grueso -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M54,4c27.614,0 50,22.386 50,50s-22.386,50 -50,50S4,81.614 4,54 S26.386,4 54,4z M54,10c-24.301,0 -44,19.699 -44,44s19.699,44 44,44s44,-19.699 44,-44 S78.301,10 54,10z" />
+    
+    <!-- Swoosh plateado inferior -->
+    <path
+        android:fillColor="#C0C0C0"
+        android:pathData="M15,82 Q30,75 54,75 Q78,75 93,82 L93,92 Q78,86 54,86 Q30,86 15,92 Z" />
+    
+    <!-- Trailer/Generador dorado -->
+    <!-- Cuerpo del trailer (rectangular) -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M28,48 L28,68 L78,68 L78,48 Z" />
+    
+    <!-- Techo ligeramente redondeado -->
+    <path
+        android:fillColor="#FFA500"
+        android:pathData="M28,48 Q53,45 78,48 L78,48 L28,48 Z" />
+    
+    <!-- Ventana/Rectángulo lateral -->
+    <path
+        android:fillColor="#FFA500"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.5"
+        android:pathData="M40,52 L40,64 L60,64 L60,52 Z" />
+    
+    <!-- Rejilla frontal (líneas verticales) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M28,48 L28,68 L26,68 L26,48 Z" />
+    <path
+        android:strokeColor="#FFA500"
+        android:strokeWidth="1"
+        android:pathData="M26,50 L26,66 M27,50 L27,66" />
+    
+    <!-- Rueda izquierda -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M36,68 a5,5 0,1 1,0 10 a5,5 0,1 1,0 -10z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M38,70 a3,3 0,1 1,0 6 a3,3 0,1 1,0 -6z" />
+    
+    <!-- Rueda derecha -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M68,68 a5,5 0,1 1,0 10 a5,5 0,1 1,0 -10z" />
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M70,70 a3,3 0,1 1,0 6 a3,3 0,1 1,0 -6z" />
+    
+    <!-- Enganche/Hitch -->
+    <path
+        android:fillColor="#FFD700"
+        android:strokeColor="#000000"
+        android:strokeWidth="0.5"
+        android:pathData="M78,58 L85,58 Q86,58 86,60 Q86,62 85,62 L78,62 Z" />
+    
+    <!-- Carrito de compras (blanco) -->
     <path
         android:fillColor="#FFFFFF"
-        android:fillType="nonZero"
-        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M45,52 L45,56 L49,56 L49,52 Z" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:pathData="M43,54 L51,54 L50,60 L46,60" />
+    <path
+        android:strokeColor="#FFFFFF"
         android:strokeWidth="1"
-        android:strokeColor="#00000000" />
+        android:pathData="M44,56 L44,60 M50,56 L50,60" />
+    
+    <!-- Checkmark (blanco) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M52,58 L54,60 L58,56" />
+    
 </vector>
